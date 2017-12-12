@@ -1,0 +1,25 @@
+.header {
+  background: #016ab4;
+  background: -webkit-linear-gradient(-90deg, #016ab4, #09996e);
+  background: -o-linear-gradient(-90deg, #016ab4, #09996e);
+  background: -moz-linear-gradient(-90deg, #016ab4, #09996e);
+  background: linear-gradient(-90deg, #016ab4, #09996e);
+  width: 100%;
+  position: absolute;
+  height: 75px;
+  top: 0px;
+  left: 0px;
+}
+
+body {
+  background-color: #0169b3;
+}
+
+h1 {
+  margin-left: 25px;
+}
+
+.settings {
+  display: inline-block;
+  margin-top: 100px;
+}
