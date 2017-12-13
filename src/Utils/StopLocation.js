@@ -1,19 +1,18 @@
-import React from "react";
 var request = require("request");
 
-const StopLocation = line => {
-  let location = [];
-  let linesRequest =
-    "http://data.itsfactory.fi/journeys/api/1/journeys?lineId=" + line;
-  request(linesRequest, function(error, response, body) {
-    let stops = JSON.parse(body);
-    let stopLocation = stops.body[0].calls[0].stopPoint.location;
-    console.log(stopLocation);
-    let stopLocationSplit = stopLocation.split(",");
-    location.push(Number(stopLocationSplit[0]));
-    location.push(Number(stopLocationSplit[1]));
+const stopLocation = (stop, callback) => {
+  let stopCoordinates = { lat: 0, lon: 0 };
+  let stopRequest =
+    "http://data.itsfactory.fi/journeys/api/1/journeys?lineId=" + stop;
+  request(stopRequest, (error, response, body) => {
+    let stopInfo = JSON.parse(body);
+    console.log("Stop info:", stopInfo);
+    let stopLoc = stopInfo.body[0].calls[0].stopPoint.location;
+    let stopCoordinatesSplit = stopLoc.split(",");
+    stopCoordinates.lat = Number(stopCoordinatesSplit[0]);
+    stopCoordinates.lon = Number(stopCoordinatesSplit[1]);
+    callback(stopCoordinates);
   });
-  return location;
 };
 
-export default StopLocation;
+export default stopLocation;
