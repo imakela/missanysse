@@ -5,6 +5,7 @@ import Distance from "./Distance";
 import busLocation from "../Utils/busLocation";
 import stopLocation from "../Utils/stopLocation";
 import distanceCalculator from "../Utils/distanceCalculator";
+import getAllBusses from "../Utils/getAllBusses";
 
 const getCoordinates = (bus, stop, callback) => {
   let busLoc;
@@ -29,16 +30,17 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      distance: 0
+      distance: null
     };
   }
 
   componentDidMount() {
-    calculateDistance("2", "2", d => {
+    calculateDistance("3A", "3A", d => {
       this.setState({
         distance: d
       });
     });
+    getAllBusses();
   }
 
   render() {
