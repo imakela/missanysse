@@ -6,6 +6,7 @@ import busLocation from "../Utils/busLocation";
 import stopLocation from "../Utils/stopLocation";
 import distanceCalculator from "../Utils/distanceCalculator";
 import getAllStops from "../Utils/getAllStops";
+import getBussesForStop from "../Utils/getBussesForStop";
 
 
 const getCoordinates = (bus, stop, callback) => {
@@ -48,6 +49,7 @@ class App extends React.Component {
         stops: allStops
       })
     });
+    getBussesForStop([4516]); // Chosen stop goes here, remember callback funciton.
   }
 
   stopSearch = (e) => {

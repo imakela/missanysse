@@ -11,10 +11,12 @@ const getAllStops = (callback) => {
     let stop;
     let stopName;
     let stopShortName;
+    let stopUrl;
     for(let i = 0; i < len; i++) {
       stopName = stopsObject.body[i].name;
       stopShortName = stopsObject.body[i].shortName;
-      stop = {name: stopName, shortName: stopShortName};
+      stopUrl = stopsObject.body[i].url;
+      stop = {name: stopName, shortName: stopShortName, url: stopUrl};
       allStops.push(stop);
     }
     console.log(allStops);
