@@ -5,7 +5,8 @@ import Distance from "./Distance";
 import busLocation from "../Utils/busLocation";
 import stopLocation from "../Utils/stopLocation";
 import distanceCalculator from "../Utils/distanceCalculator";
-import getAllBusses from "../Utils/getAllBusses";
+import getAllStops from "../Utils/getAllStops";
+
 
 const getCoordinates = (bus, stop, callback) => {
   let busLoc;
@@ -30,7 +31,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      distance: null
+      distance: null,
+      stops: null,
+      visibleStops: [],
     };
   }
 
@@ -40,14 +43,39 @@ class App extends React.Component {
         distance: d
       });
     });
-    getAllBusses();
+    getAllStops(allStops => {
+      this.setState({
+        stops: allStops
+      })
+    });
   }
+
+  stopSearch = (e) => {
+    let terms = e.target.value.toUpperCase();
+    let stopsToShow = [];
+    if(terms.length > 2) {
+      for (let i = 0; i < this.state.stops.length; i++) {
+        let compare = this.state.stops[i].name;
+        if (compare.toUpperCase().indexOf(terms) > -1) {
+          stopsToShow.push(this.state.stops[i]);
+        }
+      }
+      this.setState({
+        visibleStops: stopsToShow,
+      })
+    } else {
+      this.setState({
+        visibleStops: [],
+      });
+    }
+  };
 
   render() {
     return (
       <div className="App">
         <Header />
-        <Settings />
+        <Settings stopSearch={this.stopSearch} 
+                  visibleStops={this.state.visibleStops} />
         <Distance distance={this.state.distance} />
       </div>
     );

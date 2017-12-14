@@ -1,9 +1,18 @@
 import React from "react";
+var _ = require("lodash");
 
-const Settings = () => {
+const Settings = (props) => {
   return (
     <div className="settings">
-      <p>tähän asetuksia</p>
+      
+      <div className="search">
+        <input type="text" className="searchfield" onKeyUp={e => props.stopSearch(e)} />
+      </div>
+      <ul>
+        {_.range(props.visibleStops.length).map(i => (
+          <li key={i} className="stopslist">{props.visibleStops[i].name}({props.visibleStops[i].shortName})</li>
+        ))}
+      </ul>
     </div>
   );
 };
