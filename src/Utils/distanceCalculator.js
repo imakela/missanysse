@@ -15,7 +15,6 @@ const distanceCalculator = (busLoc, stopLoc) => {
     Math.cos(l1) * Math.cos(l2) * Math.sin(lond / 2) * Math.sin(lond / 2);
   let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   let d = R * c;
-  console.log(d);
   return d;
 };
 

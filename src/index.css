@@ -1,9 +1,9 @@
 .header {
   background: #016ab4;
-  background: -webkit-linear-gradient(-90deg, #016ab4, #09996e);
-  background: -o-linear-gradient(-90deg, #016ab4, #09996e);
-  background: -moz-linear-gradient(-90deg, #016ab4, #09996e);
-  background: linear-gradient(-90deg, #016ab4, #09996e);
+  background: -webkit-linear-gradient(to bottom right, #09996e, #016ab4);
+  background: -o-linear-gradient(to bottom right, #09996e, #016ab4);
+  background: -moz-linear-gradient(to bottom right, #09996e, #016ab4);
+  background: linear-gradient(to bottom right, #09996e, #016ab4);
   width: 100%;
   position: absolute;
   height: 75px;
@@ -11,8 +11,14 @@
   left: 0px;
 }
 
+.App {
+  margin: auto;
+  text-align: center;
+  max-width: 400px;
+}
+
 body {
-  background-color: #0169b3;
+  background-color: #016ab4;
 }
 
 h1 {
@@ -21,5 +27,37 @@ h1 {
 
 .settings {
   display: inline-block;
-  margin-top: 100px;
+}
+
+.settings input {
+  width: 170px;
+}
+
+.settings ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow: hidden;
+  overflow-y: scroll; 
+}
+.stopslist {
+  background-color: lightskyblue;
+  -webkit-user-select: none;  
+  -moz-user-select: none;     
+  -ms-user-select: none;      
+  user-select: none;
+}
+
+.content {
+  margin-top: 120px;
+}
+
+.stopslist:hover {
+  background-color: #517890;
+  cursor: pointer;
+}
+
+.stopinfo p {
+  margin: 0;
 }
