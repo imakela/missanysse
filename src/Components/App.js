@@ -1,39 +1,16 @@
 import React from "react";
 import Header from "./Header";
 import Settings from "./Settings";
-import Distance from "./Distance";
 import StopInfo from "./StopInfo";
-import busLocation from "../Utils/busLocation";
-import stopLocation from "../Utils/stopLocation";
 import distanceCalculator from "../Utils/distanceCalculator";
 import getAllStops from "../Utils/getAllStops";
 import getBussesForStop from "../Utils/getBussesForStop";
 
 
-const getCoordinates = (bus, stop, callback) => {
-  let busLoc;
-  let stopLoc;
-  busLocation(bus, busCoordinates => {
-    busLoc = busCoordinates;
-    stopLocation(stop, stopCoordinates => {
-      stopLoc = stopCoordinates;
-      callback(busLoc, stopLoc);
-    });
-  });
-};
-
-const calculateDistance = (bus, stop, callback) => {
-  getCoordinates(bus, stop, (busLoc, stopLoc) => {
-    let d = distanceCalculator(busLoc, stopLoc);
-    callback(d);
-  });
-};
-
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      distance: null,
       stops: null,
       visibleStops: [],
       chosenStop: null,
@@ -42,11 +19,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    calculateDistance("3A", "3A", d => { //This is how distance is calculated and executed.
-      this.setState({
-        distance: d
-      });
-    });
     getAllStops(allStops => {
       this.setState({
         stops: allStops
@@ -75,9 +47,43 @@ class App extends React.Component {
     }
   };
 
+  getTimeDifference = bus => {
+    let today = new Date();
+    if(bus.arrival === undefined) {
+      bus.arrivingIn = "?";
+      return;
+    }
+    let arrival = new Date(bus.arrival);
+    let difference = arrival.getTime() - today.getTime();
+    let inMinutes = Math.round(difference / 60000);
+    inMinutes = inMinutes < 0 ? 0 : inMinutes;
+    bus.arrivingIn = inMinutes;
+  };
+
+  orderInArrival = busses => {
+    if(busses.length > 1) {
+      busses.sort((a, b) => {
+        return a.arrivingIn - b.arrivingIn;
+      });
+    }
+  };
+
+  getDistances = bus => {
+    let stopLocation = this.state.chosenStop.location;
+    let stopLocationSplit = stopLocation.split(",");
+    let stopLocObj = { longitude: Number(stopLocationSplit[1]), latitude: Number(stopLocationSplit[0]) }
+    bus.distance = Math.round(distanceCalculator(bus.location, stopLocObj));
+  };
+
   showIncomingBusses = (busses) => {
-    console.log(busses);
     if(busses !== undefined) {
+      for(let i = 0; i < busses.length; i++) {
+        this.getTimeDifference(busses[i]);
+      }
+      this.orderInArrival(busses);
+      for(let i = 0; i < busses.length; i++) {
+        this.getDistances(busses[i]);
+      }
       this.setState({
         incomingBusses: busses
       });

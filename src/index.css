@@ -41,6 +41,12 @@ h1 {
   overflow: hidden;
   overflow-y: scroll; 
 }
+
+.incomingbusses {
+  list-style-type: none;
+  padding: 0;
+}
+
 .stopslist {
   background-color: lightskyblue;
   -webkit-user-select: none;  
