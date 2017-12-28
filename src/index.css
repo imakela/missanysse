@@ -39,7 +39,7 @@ h1 {
   margin: 0;
   max-height: 200px;
   overflow: hidden;
-  overflow-y: scroll; 
+  overflow-y: scroll;
 }
 
 .incomingbusses {
@@ -49,9 +49,9 @@ h1 {
 
 .stopslist {
   background-color: lightskyblue;
-  -webkit-user-select: none;  
-  -moz-user-select: none;     
-  -ms-user-select: none;      
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 

@@ -7,7 +7,6 @@ import distanceCalculator from "../Utils/distanceCalculator";
 import getAllStops from "../Utils/getAllStops";
 import getBussesForStop from "../Utils/getBussesForStop";
 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -15,7 +14,7 @@ class App extends React.Component {
       stops: null,
       visibleStops: [],
       chosenStop: null,
-      incomingBusses: [],
+      incomingBusses: []
     };
   }
 
@@ -23,34 +22,37 @@ class App extends React.Component {
     getAllStops(allStops => {
       this.setState({
         stops: allStops
-      })
+      });
     });
   }
 
-  stopSearch = (e) => {
+  stopSearch = e => {
     let terms = e.target.value.toUpperCase();
     let stopsToShow = [];
-    if(terms.length > 2) {
+    if (terms.length > 2) {
       for (let i = 0; i < this.state.stops.length; i++) {
         let compareName = this.state.stops[i].name;
         let compareNum = this.state.stops[i].shortName;
-        if ((compareName.toUpperCase().indexOf(terms) > -1) || (compareNum.indexOf(terms) > -1)) {
+        if (
+          compareName.toUpperCase().indexOf(terms) > -1 ||
+          compareNum.indexOf(terms) > -1
+        ) {
           stopsToShow.push(this.state.stops[i]);
         }
       }
       this.setState({
-        visibleStops: stopsToShow,
-      })
+        visibleStops: stopsToShow
+      });
     } else {
       this.setState({
-        visibleStops: [],
+        visibleStops: []
       });
     }
   };
 
   getTimeDifference = bus => {
     let today = new Date();
-    if(bus.arrival === undefined) {
+    if (bus.arrival === undefined) {
       bus.arrivingIn = "?";
       return;
     }
@@ -62,7 +64,7 @@ class App extends React.Component {
   };
 
   orderInArrival = busses => {
-    if(busses.length > 1) {
+    if (busses.length > 1) {
       busses.sort((a, b) => {
         return a.arrivingIn - b.arrivingIn;
       });
@@ -72,17 +74,20 @@ class App extends React.Component {
   getDistances = bus => {
     let stopLocation = this.state.chosenStop.location;
     let stopLocationSplit = stopLocation.split(",");
-    let stopLocObj = { longitude: Number(stopLocationSplit[1]), latitude: Number(stopLocationSplit[0]) }
+    let stopLocObj = {
+      longitude: Number(stopLocationSplit[1]),
+      latitude: Number(stopLocationSplit[0])
+    };
     bus.distance = Math.round(distanceCalculator(bus.location, stopLocObj));
   };
 
-  showIncomingBusses = (busses) => {
-    if(busses !== undefined) {
-      for(let i = 0; i < busses.length; i++) {
+  showIncomingBusses = busses => {
+    if (busses !== undefined) {
+      for (let i = 0; i < busses.length; i++) {
         this.getTimeDifference(busses[i]);
       }
       this.orderInArrival(busses);
-      for(let i = 0; i < busses.length; i++) {
+      for (let i = 0; i < busses.length; i++) {
         this.getDistances(busses[i]);
       }
       this.setState({
@@ -95,11 +100,14 @@ class App extends React.Component {
     }
   };
 
-  chooseStop = (stop) => {
-    this.setState({ 
-      chosenStop: stop,
-      visibleStops: [],
-    }, getBussesForStop(stop.shortName, this.showIncomingBusses));
+  chooseStop = stop => {
+    this.setState(
+      {
+        chosenStop: stop,
+        visibleStops: []
+      },
+      getBussesForStop(stop.shortName, this.showIncomingBusses)
+    );
   };
 
   render() {
@@ -107,13 +115,17 @@ class App extends React.Component {
       <div className="App">
         <Header />
         <div className="content">
-        <Settings stopSearch={this.stopSearch} 
-                  visibleStops={this.state.visibleStops}
-                  chosenStop={this.state.chosenStop}
-                  chooseStop={this.chooseStop} />
-        <Busses   incomingBusses={this.state.incomingBusses} />
-        <StopInfo chosenStop={this.state.chosenStop}
-                  incomingBusses={this.state.incomingBusses} />
+          <Settings
+            stopSearch={this.stopSearch}
+            visibleStops={this.state.visibleStops}
+            chosenStop={this.state.chosenStop}
+            chooseStop={this.chooseStop}
+          />
+          <Busses incomingBusses={this.state.incomingBusses} />
+          <StopInfo
+            chosenStop={this.state.chosenStop}
+            incomingBusses={this.state.incomingBusses}
+          />
         </div>
       </div>
     );
