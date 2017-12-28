@@ -3,18 +3,26 @@ var _ = require("lodash");
 
 
 const StopInfo = (props) => {
-    let stop = props.chosenStop !== null ? props.chosenStop.name + "(" + props.chosenStop.shortName + ")"
+    const stop = props.chosenStop !== null ? props.chosenStop.name + "(" + props.chosenStop.shortName + ")"
                                          : "";
-    let anyBusses = props.incomingBusses.length > 0 ? true : false;
-    return(
+    const anyBusses = props.incomingBusses.length > 0 ? true : false;
+    let visibleBusses = [];
+    if(anyBusses) {
+        for(let i = 0; i < props.incomingBusses.length; i++) {
+            if(props.incomingBusses[i].visible) {
+                visibleBusses.push(props.incomingBusses[i]);
+            }
+        }
+    }
+    return (
         <div className="stopinfo">
             <p>{stop}</p>
             <ul className="incomingbusses">
                 {anyBusses &&
-                    _.range(props.incomingBusses.length).map(i => (
-                        <li key={i}><b>Bus: </b>{props.incomingBusses[i].line} Arriving in: 
-                                {" " + props.incomingBusses[i].arrivingIn} minutes,
-                                <b> Distance: </b>{props.incomingBusses[i].distance + " "} metres</li>
+                    _.range(visibleBusses.length).map(i => (
+                        <li key={i}><b>Bus: </b>{visibleBusses[i].line} Arriving in: 
+                                {" " + visibleBusses[i].arrivingIn} minutes,
+                                <b> Distance: </b>{visibleBusses[i].distance + " "} metres</li>
                     ))
                 }
             </ul>

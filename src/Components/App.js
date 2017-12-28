@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Header";
 import Settings from "./Settings";
 import StopInfo from "./StopInfo";
+import Busses from "./Busses";
 import distanceCalculator from "../Utils/distanceCalculator";
 import getAllStops from "../Utils/getAllStops";
 import getBussesForStop from "../Utils/getBussesForStop";
@@ -110,6 +111,7 @@ class App extends React.Component {
                   visibleStops={this.state.visibleStops}
                   chosenStop={this.state.chosenStop}
                   chooseStop={this.chooseStop} />
+        <Busses   incomingBusses={this.state.incomingBusses} />
         <StopInfo chosenStop={this.state.chosenStop}
                   incomingBusses={this.state.incomingBusses} />
         </div>

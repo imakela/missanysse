@@ -31,7 +31,7 @@ const getBussesForStop = (stop, callback) => {
                 let location = arr[i].vehicleLocation;
                 let arrival = arr[i].call.expectedArrivalTime;
                 bus = { line: lineRef, location: location, arrival: arrival, 
-                        arrivingIn: undefined, distance: undefined };
+                        arrivingIn: undefined, distance: undefined, visible: true };
                 bussesForStop.push(bus);
             }
             callback(bussesForStop);
