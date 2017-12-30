@@ -22,7 +22,7 @@ const getBussesForStop = (stop, callback) => {
   let busObject;
   let bussesForStop = [];
   let bus;
-  request(busRequest, (error, response, body) => {
+  request(busRequest, { timeout: 10000 }, (error, response, body) => {
     busObject = JSON.parse(body);
     console.log("Incoming busses request: ", busObject);
     let path = "body." + stop;
@@ -32,13 +32,15 @@ const getBussesForStop = (stop, callback) => {
         let lineRef = arr[i].lineRef;
         let location = arr[i].vehicleLocation;
         let arrival = arr[i].call.expectedArrivalTime;
+        let onStop = arr[i].call.vehicleAtStop;
         bus = {
           line: lineRef,
           location: location,
           arrival: arrival,
           arrivingIn: undefined,
           distance: undefined,
-          visible: true
+          visible: true,
+          onStop: onStop
         };
         bussesForStop.push(bus);
       }

@@ -4,7 +4,7 @@ const getAllStops = callback => {
   let stopsObject;
   let allStops = [];
   let stopReq = "http://data.itsfactory.fi/journeys/api/1/stop-points";
-  request(stopReq, (error, response, body) => {
+  request(stopReq, { timeout: 10000 }, (error, response, body) => {
     stopsObject = JSON.parse(body);
     console.log("All stops request object: ", stopsObject);
     let len = stopsObject.body.length;

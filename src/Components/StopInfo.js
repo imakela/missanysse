@@ -2,10 +2,6 @@ import React from "react";
 var _ = require("lodash");
 
 const StopInfo = props => {
-  const stop =
-    props.chosenStop !== null
-      ? props.chosenStop.name + "(" + props.chosenStop.shortName + ")"
-      : "";
   const anyBusses = props.incomingBusses.length > 0 ? true : false;
   let visibleBusses = [];
   if (anyBusses) {
@@ -17,7 +13,6 @@ const StopInfo = props => {
   }
   return (
     <div className="stopinfo">
-      <p>{stop}</p>
       <ul className="incomingbusses">
         {anyBusses &&
           _.range(visibleBusses.length).map(i => (

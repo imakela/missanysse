@@ -11,6 +11,11 @@
   left: 0px;
 }
 
+.visiblestops {
+  position: absolute;
+  width: 174px;
+}
+
 .App {
   margin: auto;
   text-align: center;
@@ -47,12 +52,53 @@ h1 {
   padding: 0;
 }
 
+.stopname {
+  margin-top: 3px;
+}
+
 .stopslist {
   background-color: lightskyblue;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.busicons {
+  margin-top: 5px;
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.busdot {
+  cursor: pointer;
+  min-width: 30px;
+  margin-left: 2px;
+  margin-top: 3px;
+  margin-right: 2px;
+  outline-color: black;
+  outline-style: outset;
+  outline-width: 1px;
+  font-weight: bold;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.busdot.passive {
+  text-decoration: line-through;
+  background-color: #004170;
+}
+
+.busdot:hover,
+.passive:hover {
+  outline-color: darkgray;
+}
+
+.busdot:active,
+.passive:active {
+  outline-color: white;
 }
 
 .content {
