@@ -3,11 +3,11 @@ var _ = require("lodash");
 
 const StopInfo = props => {
   const anyBusses = props.incomingBusses.length > 0 ? true : false;
-  let visibleBusses = [];
+  const bussesToShow = [];
   if (anyBusses) {
     for (let i = 0; i < props.incomingBusses.length; i++) {
-      if (props.incomingBusses[i].visible) {
-        visibleBusses.push(props.incomingBusses[i]);
+      if (props.visibleBusses.indexOf(props.incomingBusses[i].line) > -1) {
+        bussesToShow.push(props.incomingBusses[i]);
       }
     }
   }
@@ -15,13 +15,13 @@ const StopInfo = props => {
     <div className="stopinfo">
       <ul className="incomingbusses">
         {anyBusses &&
-          _.range(visibleBusses.length).map(i => (
+          _.range(bussesToShow.length).map(i => (
             <li key={i}>
-              <b>Bus: </b>
-              {visibleBusses[i].line} Arriving in:
-              {" " + visibleBusses[i].arrivingIn} minutes,
+              <b>{bussesToShow[i].line} </b>
+              Arriving in:
+              {" " + bussesToShow[i].arrivingIn} min,
               <b> Distance: </b>
-              {visibleBusses[i].distance + " "} metres
+              {bussesToShow[i].distance + " "} m
             </li>
           ))}
       </ul>

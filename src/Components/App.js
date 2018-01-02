@@ -6,6 +6,7 @@ import Busses from "./Busses";
 import distanceCalculator from "../Utils/distanceCalculator";
 import getAllStops from "../Utils/getAllStops";
 import getBussesForStop from "../Utils/getBussesForStop";
+import uniqueBusses from "../Utils/uniqueBusses";
 
 class App extends React.Component {
   constructor(props) {
@@ -15,7 +16,10 @@ class App extends React.Component {
       visibleStops: [],
       chosenStop: null,
       incomingBusses: [],
-      autoUpdate: false
+      busLines: [],
+      visibleBusses: [],
+      autoUpdate: false,
+      firstLoad: true
     };
   }
 
@@ -28,14 +32,19 @@ class App extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.state.autoUpdate) {
-      console.log("DERPOROING");
-      this.setState({ autoUpdate: false }, () => {
-        console.log("-----");
-        setTimeout(this.update, 5000);
-      });
+    if (!this.state.autoUpdate && !this.state.firstLoad) {
+      console.log("Updating initialized");
+      this.setState({ autoUpdate: true }, this.initUpdating);
     }
   }
+
+  initUpdating = () => {
+    setTimeout(() => {
+      console.log("Executing update...");
+      this.update();
+      this.initUpdating();
+    }, 5000);
+  };
 
   stopSearch = e => {
     let terms = e.target.value.toUpperCase();
@@ -73,12 +82,8 @@ class App extends React.Component {
     let arrival = new Date(bus.arrival);
     let difference = arrival.getTime() - today.getTime();
     let inMinutes = Math.round(difference / 60000);
-    if (inMinutes < -15) {
+    if (inMinutes < -7) {
       bus.arrivingIn = inMinutes;
-      console.log("!!!!!!!!!!It happened!!!!!!!!!!");
-      console.log(arrival);
-      console.log(today);
-      console.log(inMinutes);
     } else {
       inMinutes = inMinutes < 0 ? 0 : inMinutes;
       bus.arrivingIn = inMinutes;
@@ -112,18 +117,22 @@ class App extends React.Component {
       for (let i = busses.length - 1; i >= 0; i--) {
         this.getDistances(busses[i]);
         this.getTimeDifference(busses[i]);
-        if (busses[i].arrivingIn < -15) {
+        if (busses[i].arrivingIn < -7) {
           busses.splice(i, 1);
         }
       }
       this.orderInArrival(busses);
+      let uniqBusses = uniqueBusses(busses);
       this.setState({
         incomingBusses: busses,
-        autoUpdate: true
+        busLines: uniqBusses,
+        visibleBusses: uniqBusses
       });
     } else {
       this.setState({
-        incomingBusses: []
+        incomingBusses: [],
+        visibleBusses: [],
+        busLines: []
       });
     }
   };
@@ -132,7 +141,8 @@ class App extends React.Component {
     this.setState(
       {
         chosenStop: stop,
-        visibleStops: []
+        visibleStops: [],
+        firstLoad: false
       },
       getBussesForStop(stop.shortName, this.showIncomingBusses)
     );
@@ -140,39 +150,66 @@ class App extends React.Component {
 
   setVisibleBusses = line => {
     this.setState(prevState => ({
-      incomingBusses: prevState.incomingBusses.map(bus => {
-        if (bus.line === line) {
-          bus.visible = !bus.visible;
-        }
-        return bus;
-      })
+      visibleBusses:
+        prevState.visibleBusses.indexOf(line) > -1
+          ? prevState.visibleBusses.filter(
+              (_, i) => prevState.visibleBusses[i] !== line
+            )
+          : prevState.visibleBusses.concat([line])
     }));
   };
 
-  update = () => {
-    let visibilitys = [];
-    for (let i = 0; i < this.state.incomingBusses.length; i++) {
-      visibilitys.push({
-        line: this.state.incomingBusses[i].line,
-        visibility: this.state.incomingBusses[i].visible
-      });
+  cleanUpVisibleBusses = () => {
+    if (this.state.busLines.length < this.state.visibleBusses.length) {
+      this.setState(prevState => ({
+        visibleBusses: prevState.visibleBusses.filter(
+          (_, i) => prevState.busLines.indexOf(prevState.visibleBusses[i]) > -1
+        )
+      }));
     }
+  };
+
+  addNewVisible = (busses, prevBusses, visibleBusses) => {
+    console.log("Its Happening!");
+    return visibleBusses.concat(
+      busses.filter(bus => {
+        return prevBusses.indexOf(bus) < 0;
+      })
+    );
+  };
+
+  update = () => {
     getBussesForStop(this.state.chosenStop.shortName, busses => {
       if (busses !== undefined) {
         for (let i = busses.length - 1; i >= 0; i--) {
           this.getDistances(busses[i]);
           this.getTimeDifference(busses[i]);
-          if (busses[i].arrivingIn < -15) {
+          if (busses[i].arrivingIn < -7) {
             busses.splice(i, 1);
           }
         }
         this.orderInArrival(busses);
-        this.setState({
-          incomingBusses: busses
-        });
+        let uniqBusses = uniqueBusses(busses);
+        this.setState(
+          prevState => ({
+            incomingBusses: busses,
+            busLines: uniqBusses,
+            autoUpdate: true,
+            visibleBusses:
+              prevState.busLines.length < uniqBusses.length
+                ? this.addNewVisible(
+                    uniqBusses,
+                    prevState.busLines,
+                    prevState.visibleBusses
+                  )
+                : prevState.visibleBusses
+          }),
+          this.cleanUpVisibleBusses
+        );
       } else {
         this.setState({
-          incomingBusses: []
+          incomingBusses: [],
+          busLines: []
         });
       }
     });
@@ -191,12 +228,15 @@ class App extends React.Component {
           />
           <Busses
             incomingBusses={this.state.incomingBusses}
+            busLines={this.state.busLines}
+            visibleBusses={this.state.visibleBusses}
             chosenStop={this.state.chosenStop}
             setVisibleBusses={this.setVisibleBusses}
           />
           <StopInfo
             chosenStop={this.state.chosenStop}
             incomingBusses={this.state.incomingBusses}
+            visibleBusses={this.state.visibleBusses}
           />
         </div>
       </div>

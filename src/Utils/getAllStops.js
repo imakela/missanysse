@@ -7,22 +7,12 @@ const getAllStops = callback => {
   request(stopReq, { timeout: 10000 }, (error, response, body) => {
     stopsObject = JSON.parse(body);
     console.log("All stops request object: ", stopsObject);
-    let len = stopsObject.body.length;
     let stop;
-    let stopName;
-    let stopShortName;
-    let stopUrl;
-    let stopLoc;
-    for (let i = 0; i < len; i++) {
-      stopName = stopsObject.body[i].name;
-      stopShortName = stopsObject.body[i].shortName;
-      stopLoc = stopsObject.body[i].location;
-      stopUrl = stopsObject.body[i].url;
+    for (let i = 0; i < stopsObject.body.length; i++) {
       stop = {
-        name: stopName,
-        shortName: stopShortName,
-        url: stopUrl,
-        location: stopLoc
+        name: stopsObject.body[i].name,
+        shortName: stopsObject.body[i].shortName,
+        location: stopsObject.body[i].location
       };
       allStops.push(stop);
     }

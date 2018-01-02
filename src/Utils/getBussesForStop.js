@@ -29,18 +29,14 @@ const getBussesForStop = (stop, callback) => {
     let arr = getNested(busObject, path);
     if (arr !== undefined) {
       for (let i = 0; i < arr.length; i++) {
-        let lineRef = arr[i].lineRef;
-        let location = arr[i].vehicleLocation;
-        let arrival = arr[i].call.expectedArrivalTime;
-        let onStop = arr[i].call.vehicleAtStop;
         bus = {
-          line: lineRef,
-          location: location,
-          arrival: arrival,
+          line: arr[i].lineRef,
+          location: arr[i].vehicleLocation,
+          arrival: arr[i].call.expectedArrivalTime,
+          depart: arr[i].call.expectedDepartureTime,
           arrivingIn: undefined,
           distance: undefined,
-          visible: true,
-          onStop: onStop
+          onStop: arr[i].call.vehicleAtStop
         };
         bussesForStop.push(bus);
       }
