@@ -34,25 +34,27 @@ class App extends React.Component {
   componentDidUpdate() {
     if (!this.state.autoUpdate && !this.state.firstLoad) {
       console.log("Updating initialized");
-      this.setState({ autoUpdate: true }, this.initUpdating);
+      this.initUpdating();
     }
   }
 
   initUpdating = () => {
-    setTimeout(() => {
-      console.log("Executing update...");
-      this.update();
-      this.initUpdating();
-    }, 15000);
+    this.setState({ autoUpdate: true }, () => {
+      setTimeout(() => {
+        console.log("Executing update...");
+        this.update();
+        this.initUpdating();
+      }, 15000);
+    });
   };
 
   stopSearch = e => {
-    let terms = e.target.value.toUpperCase();
-    let stopsToShow = [];
+    const terms = e.target.value.toUpperCase();
+    const stopsToShow = [];
     if (terms.length > 2) {
       for (let i = 0; i < this.state.stops.length; i++) {
-        let compareName = this.state.stops[i].name;
-        let compareNum = this.state.stops[i].shortName;
+        const compareName = this.state.stops[i].name;
+        const compareNum = this.state.stops[i].shortName;
         if (
           compareName.toUpperCase().indexOf(terms) > -1 ||
           compareNum.indexOf(terms) > -1
@@ -71,13 +73,13 @@ class App extends React.Component {
   };
 
   getTimeDifference = bus => {
-    let today = new Date();
-    let arrival = new Date(bus.arrival);
-    let depart = new Date(bus.depart);
-    let arrivalDifference = arrival.getTime() - today.getTime();
-    let departDifference = depart.getTime() - today.getTime();
-    let arrivalInMinutes = Math.round(arrivalDifference / 60000);
-    let departInMinutes = Math.round(departDifference / 60000);
+    const today = new Date();
+    const arrival = new Date(bus.arrival);
+    const depart = new Date(bus.depart);
+    const arrivalDifference = arrival.getTime() - today.getTime();
+    const departDifference = depart.getTime() - today.getTime();
+    const arrivalInMinutes = Math.round(arrivalDifference / 60000);
+    const departInMinutes = Math.round(departDifference / 60000);
     if (arrivalInMinutes < -7) {
       bus.arrivingIn = arrivalInMinutes;
     } else {
@@ -91,9 +93,7 @@ class App extends React.Component {
 
   orderInArrival = busses => {
     if (busses.length > 1) {
-      busses.sort((a, b) => {
-        return a.arrivingIn - b.arrivingIn;
-      });
+      busses.sort((a, b) => a.arrivingIn - b.arrivingIn);
     }
   };
 
@@ -102,9 +102,9 @@ class App extends React.Component {
       bus.distance = 0;
       return;
     }
-    let stopLocation = this.state.chosenStop.location;
-    let stopLocationSplit = stopLocation.split(",");
-    let stopLocObj = {
+    const stopLocation = this.state.chosenStop.location;
+    const stopLocationSplit = stopLocation.split(",");
+    const stopLocObj = {
       longitude: Number(stopLocationSplit[1]),
       latitude: Number(stopLocationSplit[0])
     };
@@ -121,7 +121,7 @@ class App extends React.Component {
         }
       }
       this.orderInArrival(busses);
-      let uniqBusses = uniqueBusses(busses);
+      const uniqBusses = uniqueBusses(busses);
       this.setState({
         incomingBusses: busses,
         busLines: uniqBusses,
@@ -168,13 +168,8 @@ class App extends React.Component {
     }
   };
 
-  addNewVisible = (busses, prevBusses, visibleBusses) => {
-    return visibleBusses.concat(
-      busses.filter(bus => {
-        return prevBusses.indexOf(bus) < 0;
-      })
-    );
-  };
+  addNewVisible = (busses, prevBusses, visibleBusses) =>
+    visibleBusses.concat(busses.filter(bus => prevBusses.indexOf(bus) < 0));
 
   update = () => {
     getBussesForStop(this.state.chosenStop.shortName, busses => {
@@ -187,7 +182,7 @@ class App extends React.Component {
           }
         }
         this.orderInArrival(busses);
-        let uniqBusses = uniqueBusses(busses);
+        const uniqBusses = uniqueBusses(busses);
         this.setState(
           prevState => ({
             incomingBusses: busses,
