@@ -43,7 +43,7 @@ class App extends React.Component {
       console.log("Executing update...");
       this.update();
       this.initUpdating();
-    }, 5000);
+    }, 15000);
   };
 
   stopSearch = e => {
@@ -72,22 +72,21 @@ class App extends React.Component {
 
   getTimeDifference = bus => {
     let today = new Date();
-    if (bus.onStop) {
-      bus.arrivingIn = 0;
-      return;
-    } else if (bus.arrival === undefined) {
-      bus.arrivingIn = "?";
-      return;
-    }
     let arrival = new Date(bus.arrival);
-    let difference = arrival.getTime() - today.getTime();
-    let inMinutes = Math.round(difference / 60000);
-    if (inMinutes < -7) {
-      bus.arrivingIn = inMinutes;
+    let depart = new Date(bus.depart);
+    let arrivalDifference = arrival.getTime() - today.getTime();
+    let departDifference = depart.getTime() - today.getTime();
+    let arrivalInMinutes = Math.round(arrivalDifference / 60000);
+    let departInMinutes = Math.round(departDifference / 60000);
+    if (arrivalInMinutes < -7) {
+      bus.arrivingIn = arrivalInMinutes;
     } else {
-      inMinutes = inMinutes < 0 ? 0 : inMinutes;
-      bus.arrivingIn = inMinutes;
+      bus.arrivingIn = arrivalInMinutes < 0 ? 0 : arrivalInMinutes;
     }
+    if (isNaN(bus.arrivingIn)) {
+      bus.arrivingIn = 0;
+    }
+    bus.departingIn = departInMinutes < 0 ? 0 : departInMinutes;
   };
 
   orderInArrival = busses => {
@@ -170,7 +169,6 @@ class App extends React.Component {
   };
 
   addNewVisible = (busses, prevBusses, visibleBusses) => {
-    console.log("Its Happening!");
     return visibleBusses.concat(
       busses.filter(bus => {
         return prevBusses.indexOf(bus) < 0;
@@ -196,7 +194,7 @@ class App extends React.Component {
             busLines: uniqBusses,
             autoUpdate: true,
             visibleBusses:
-              prevState.busLines.length < uniqBusses.length
+              prevState.busLines.length !== uniqBusses.length
                 ? this.addNewVisible(
                     uniqBusses,
                     prevState.busLines,

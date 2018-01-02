@@ -18,15 +18,23 @@ const StopInfo = props => {
           _.range(bussesToShow.length).map(i => (
             <li key={i}>
               <b>{bussesToShow[i].line} </b>
-              Arriving in:
-              {" " + bussesToShow[i].arrivingIn} min,
+              {bussesToShow[i].onStop
+                ? "Departing in: " + bussesToShow[i].departingIn + " "
+                : "Arriving in: " + bussesToShow[i].arrivingIn + " "}
+              min,
               <b> Distance: </b>
-              {bussesToShow[i].distance + " "} m
+              {bussesToShow[i].onStop ? (
+                <b>At stop</b>
+              ) : (
+                bussesToShow[i].distance + " m"
+              )}
             </li>
           ))}
       </ul>
       {!anyBusses &&
-        props.chosenStop !== null && <p>Sorry, no busses coming :(</p>}
+        props.chosenStop !== null && (
+          <p>Sorry, no busses coming in a while :(</p>
+        )}
     </div>
   );
 };

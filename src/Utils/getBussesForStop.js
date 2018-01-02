@@ -35,6 +35,7 @@ const getBussesForStop = (stop, callback) => {
           arrival: arr[i].call.expectedArrivalTime,
           depart: arr[i].call.expectedDepartureTime,
           arrivingIn: undefined,
+          departingIn: undefined,
           distance: undefined,
           onStop: arr[i].call.vehicleAtStop
         };
