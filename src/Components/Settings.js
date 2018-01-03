@@ -12,17 +12,19 @@ const Settings = props => {
           onKeyUp={e => props.stopSearch(e)}
         />
       </div>
-      <ul className="visiblestops">
-        {_.range(props.visibleStops.length).map(i => (
-          <li
-            key={i}
-            className="stopslist"
-            onClick={() => props.chooseStop(props.visibleStops[i])}
-          >
-            {props.visibleStops[i].name}({props.visibleStops[i].shortName})
-          </li>
-        ))}
-      </ul>
+      {props.visibleStops.length > 0 && (
+        <ul className="visiblestops">
+          {_.range(props.visibleStops.length).map(i => (
+            <li
+              key={i}
+              className="stopslist"
+              onClick={() => props.chooseStop(props.visibleStops[i])}
+            >
+              {props.visibleStops[i].name}({props.visibleStops[i].shortName})
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

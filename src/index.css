@@ -1,14 +1,21 @@
 .header {
-  background: #016ab4;
-  background: -webkit-linear-gradient(to bottom right, #09996e, #016ab4);
-  background: -o-linear-gradient(to bottom right, #09996e, #016ab4);
-  background: -moz-linear-gradient(to bottom right, #09996e, #016ab4);
-  background: linear-gradient(to bottom right, #09996e, #016ab4);
+  background: #09996e;
   width: 100%;
   position: absolute;
   height: 75px;
   top: 0px;
   left: 0px;
+}
+
+.content {
+  margin-top: 100px;
+  box-shadow: 0px 0px 10px 1px black;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.buspic {
+  margin-bottom: 5px;
 }
 
 .visiblestops {
@@ -19,15 +26,11 @@
 .App {
   margin: auto;
   text-align: center;
-  max-width: 420px;
+  max-width: 430px;
 }
 
 body {
   background-color: #016ab4;
-}
-
-h1 {
-  margin-left: 25px;
 }
 
 .settings {
@@ -36,6 +39,10 @@ h1 {
 
 .settings input {
   width: 170px;
+}
+
+.nobusses img {
+  margin-top: 5px;
 }
 
 .settings ul {
@@ -48,8 +55,24 @@ h1 {
 }
 
 .incomingbusses {
+  display: flex;
+  flex-direction: column;
   list-style-type: none;
   padding: 0;
+}
+
+.incomingbusses p {
+  display: inline;
+}
+
+.bus {
+  background-color: #00bcd43d;
+  margin-bottom: 1px;
+  border: 1px solid black;
+}
+
+.bus.departing {
+  background-color: #00bcd485;
 }
 
 .stopname {
@@ -99,10 +122,6 @@ h1 {
 .busdot:active,
 .passive:active {
   outline-color: white;
-}
-
-.content {
-  margin-top: 120px;
 }
 
 .stopslist:hover {

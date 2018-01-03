@@ -1,4 +1,6 @@
 import React from "react";
+import FontAwesome from "react-fontawesome";
+import "../Styles/FontAwesome/css/font-awesome.css";
 var _ = require("lodash");
 
 const StopInfo = props => {
@@ -16,25 +18,44 @@ const StopInfo = props => {
       <ul className="incomingbusses">
         {anyBusses &&
           _.range(bussesToShow.length).map(i => (
-            <li key={i}>
+            <li
+              key={i}
+              className={bussesToShow[i].onStop ? "bus departing" : "bus"}
+            >
               <b>{bussesToShow[i].line} </b>
-              {bussesToShow[i].onStop
-                ? "Departing in: " + bussesToShow[i].departingIn + " "
-                : "Arriving in: " + bussesToShow[i].arrivingIn + " "}
-              min,
-              <b> Distance: </b>
+              {bussesToShow[i].onStop ? (
+                <p>
+                  Departing in: <b>{bussesToShow[i].departingIn}</b>{" "}
+                </p>
+              ) : (
+                <p>
+                  Arriving in: <b>{bussesToShow[i].arrivingIn}</b>{" "}
+                </p>
+              )}
+              min, Distance:
               {bussesToShow[i].onStop ? (
                 <b>At stop</b>
               ) : (
-                bussesToShow[i].distance + " m"
+                <b> {bussesToShow[i].distance} m</b>
               )}
             </li>
           ))}
       </ul>
       {!anyBusses &&
-        props.chosenStop !== null && (
-          <p>Sorry, no busses coming in a while :(</p>
+        props.chosenStop !== null &&
+        !props.loading && (
+          <div className="nobusses">
+            <p>Sorry, no busses coming in a while...</p>
+            <img
+              src={require("../Img/2000px-Bus-logoZ.png")}
+              className="buspic"
+              alt="bus"
+              width="100"
+              height="100"
+            />
+          </div>
         )}
+      {props.loading && <FontAwesome name="spinner" size="2x" />}
     </div>
   );
 };

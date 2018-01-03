@@ -1,4 +1,6 @@
 import React from "react";
+import FontAwesome from "react-fontawesome";
+import "../Styles/FontAwesome/css/font-awesome.css";
 import Header from "./Header";
 import Settings from "./Settings";
 import StopInfo from "./StopInfo";
@@ -12,22 +14,26 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      stops: null,
+      stops: [],
       visibleStops: [],
       chosenStop: null,
       incomingBusses: [],
       busLines: [],
       visibleBusses: [],
       autoUpdate: false,
-      firstLoad: true
+      firstLoad: true,
+      loading: false,
+      error: false
     };
   }
 
   componentDidMount() {
     getAllStops(allStops => {
-      this.setState({
-        stops: allStops
-      });
+      if (allStops.length === 0) {
+        this.setState({ error: true });
+      } else {
+        this.setState({ stops: allStops });
+      }
     });
   }
 
@@ -113,6 +119,10 @@ class App extends React.Component {
 
   showIncomingBusses = busses => {
     if (busses !== undefined) {
+      if (busses.error) {
+        this.setState({ error: true });
+        return;
+      }
       for (let i = busses.length - 1; i >= 0; i--) {
         this.getDistances(busses[i]);
         this.getTimeDifference(busses[i]);
@@ -125,13 +135,16 @@ class App extends React.Component {
       this.setState({
         incomingBusses: busses,
         busLines: uniqBusses,
-        visibleBusses: uniqBusses
+        visibleBusses: uniqBusses,
+        error: false,
+        loading: false
       });
     } else {
       this.setState({
         incomingBusses: [],
         visibleBusses: [],
-        busLines: []
+        busLines: [],
+        loading: false
       });
     }
   };
@@ -141,7 +154,8 @@ class App extends React.Component {
       {
         chosenStop: stop,
         visibleStops: [],
-        firstLoad: false
+        firstLoad: false,
+        loading: true
       },
       getBussesForStop(stop.shortName, this.showIncomingBusses)
     );
@@ -168,12 +182,19 @@ class App extends React.Component {
     }
   };
 
-  addNewVisible = (busses, prevBusses, visibleBusses) =>
-    visibleBusses.concat(busses.filter(bus => prevBusses.indexOf(bus) < 0));
+  addNewVisible = (busses, prevBusses, visibleBusses) => {
+    return visibleBusses.concat(
+      busses.filter(bus => prevBusses.indexOf(bus) < 0)
+    );
+  };
 
   update = () => {
     getBussesForStop(this.state.chosenStop.shortName, busses => {
       if (busses !== undefined) {
+        if (busses.error) {
+          this.setState({ error: true });
+          return;
+        }
         for (let i = busses.length - 1; i >= 0; i--) {
           this.getDistances(busses[i]);
           this.getTimeDifference(busses[i]);
@@ -195,14 +216,17 @@ class App extends React.Component {
                     prevState.busLines,
                     prevState.visibleBusses
                   )
-                : prevState.visibleBusses
+                : prevState.visibleBusses,
+            error: false,
+            loading: false
           }),
           this.cleanUpVisibleBusses
         );
       } else {
         this.setState({
           incomingBusses: [],
-          busLines: []
+          busLines: [],
+          loading: false
         });
       }
     });
@@ -212,26 +236,36 @@ class App extends React.Component {
     return (
       <div className="App">
         <Header />
-        <div className="content">
-          <Settings
-            stopSearch={this.stopSearch}
-            visibleStops={this.state.visibleStops}
-            chosenStop={this.state.chosenStop}
-            chooseStop={this.chooseStop}
-          />
-          <Busses
-            incomingBusses={this.state.incomingBusses}
-            busLines={this.state.busLines}
-            visibleBusses={this.state.visibleBusses}
-            chosenStop={this.state.chosenStop}
-            setVisibleBusses={this.setVisibleBusses}
-          />
-          <StopInfo
-            chosenStop={this.state.chosenStop}
-            incomingBusses={this.state.incomingBusses}
-            visibleBusses={this.state.visibleBusses}
-          />
-        </div>
+        {!this.state.error ? (
+          <div className="content">
+            <Settings
+              stopSearch={this.stopSearch}
+              visibleStops={this.state.visibleStops}
+              chosenStop={this.state.chosenStop}
+              chooseStop={this.chooseStop}
+            />
+            <Busses
+              incomingBusses={this.state.incomingBusses}
+              busLines={this.state.busLines}
+              visibleBusses={this.state.visibleBusses}
+              chosenStop={this.state.chosenStop}
+              setVisibleBusses={this.setVisibleBusses}
+            />
+            <StopInfo
+              chosenStop={this.state.chosenStop}
+              incomingBusses={this.state.incomingBusses}
+              visibleBusses={this.state.visibleBusses}
+              loading={this.state.loading}
+            />
+            {this.state.chosenStop === null && (
+              <FontAwesome className="buspic" name="bus" size="5x" />
+            )}
+          </div>
+        ) : (
+          <div className="content">
+            <p>Internal server error, try again later.</p>
+          </div>
+        )}
       </div>
     );
   }
