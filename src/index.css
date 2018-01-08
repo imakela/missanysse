@@ -2,16 +2,23 @@
   background: #09996e;
   width: 100%;
   position: absolute;
-  height: 75px;
+  height: 55px;
   top: 0px;
   left: 0px;
 }
 
+.header h1 {
+  font-family: "Fjalla One", sans-serif;
+  margin-top: 10px;
+}
+
 .content {
-  margin-top: 100px;
+  background-color: #0096ff;
+  margin-top: 70px;
   box-shadow: 0px 0px 10px 1px black;
   border: 1px solid black;
   padding: 10px;
+  border-radius: 2%;
 }
 
 .buspic {
@@ -72,11 +79,12 @@ body {
 }
 
 .bus.departing {
-  background-color: #00bcd485;
+  background-color: #00e2ff85;
 }
 
 .stopname {
   margin-top: 3px;
+  font-weight: bold;
 }
 
 .stopslist {
@@ -94,6 +102,7 @@ body {
 }
 
 .busdot {
+  background-color: #09996e;
   cursor: pointer;
   min-width: 30px;
   margin-left: 2px;

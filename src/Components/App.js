@@ -39,7 +39,6 @@ class App extends React.Component {
 
   componentDidUpdate() {
     if (!this.state.autoUpdate && !this.state.firstLoad) {
-      console.log("Updating initialized");
       this.initUpdating();
     }
   }
@@ -47,7 +46,6 @@ class App extends React.Component {
   initUpdating = () => {
     this.setState({ autoUpdate: true }, () => {
       setTimeout(() => {
-        console.log("Executing update...");
         this.update();
         this.initUpdating();
       }, 15000);
@@ -208,15 +206,11 @@ class App extends React.Component {
           prevState => ({
             incomingBusses: busses,
             busLines: uniqBusses,
-            autoUpdate: true,
-            visibleBusses:
-              prevState.busLines.length !== uniqBusses.length
-                ? this.addNewVisible(
-                    uniqBusses,
-                    prevState.busLines,
-                    prevState.visibleBusses
-                  )
-                : prevState.visibleBusses,
+            visibleBusses: this.addNewVisible(
+              uniqBusses,
+              prevState.busLines,
+              prevState.visibleBusses
+            ),
             error: false,
             loading: false
           }),
@@ -263,7 +257,7 @@ class App extends React.Component {
           </div>
         ) : (
           <div className="content">
-            <p>Internal server error, try again later.</p>
+            <p>There seems to be a problem, try again later.</p>
           </div>
         )}
       </div>

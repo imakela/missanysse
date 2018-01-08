@@ -6,6 +6,10 @@ var _ = require("lodash");
 const StopInfo = props => {
   const anyBusses = props.incomingBusses.length > 0 ? true : false;
   const bussesToShow = [];
+  const scheduleLink =
+    props.chosenStop !== null
+      ? "https://lissu.tampere.fi/?stop=" + props.chosenStop.shortName
+      : "";
   if (anyBusses) {
     for (let i = 0; i < props.incomingBusses.length; i++) {
       if (props.visibleBusses.indexOf(props.incomingBusses[i].line) > -1) {
@@ -34,7 +38,7 @@ const StopInfo = props => {
               )}
               min, Distance:
               {bussesToShow[i].onStop ? (
-                <b>At stop</b>
+                <b> At stop</b>
               ) : (
                 <b> {bussesToShow[i].distance} m</b>
               )}
@@ -53,9 +57,15 @@ const StopInfo = props => {
               width="100"
               height="100"
             />
+            <p>
+              Check out full schedule and untracked busses for your stop at{" "}
+              <a href={scheduleLink} target="_blank">
+                Lissu
+              </a>
+            </p>
           </div>
         )}
-      {props.loading && <FontAwesome name="spinner" size="2x" />}
+      {props.loading && <FontAwesome name="spinner fa-spin" size="2x" />}
     </div>
   );
 };
