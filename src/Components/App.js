@@ -44,7 +44,7 @@ class App extends React.Component {
   }
 
   initUpdating = () => {
-    this.setState({ autoUpdate: true }, () => {
+    this.setState({ autoUpdate: true, loading: true }, () => {
       setTimeout(() => {
         this.update();
         this.initUpdating();
@@ -229,7 +229,6 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Header />
         {!this.state.error ? (
           <div className="content">
             <Settings
@@ -251,13 +250,16 @@ class App extends React.Component {
               visibleBusses={this.state.visibleBusses}
               loading={this.state.loading}
             />
-            {this.state.chosenStop === null && (
-              <FontAwesome className="buspic" name="bus" size="5x" />
+            {this.state.firstLoad && (
+              <div>
+                <h1>Missä Nysse?</h1>
+                <FontAwesome className="buspic" name="bus" size="5x" />
+              </div>
             )}
           </div>
         ) : (
           <div className="content">
-            <p>There seems to be a problem, try again later.</p>
+            <p>There seems to be a problem, retrying...</p>
           </div>
         )}
       </div>

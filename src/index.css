@@ -1,3 +1,8 @@
+@font-face {
+  font-family: lcd;
+  src: url("./Styles/Fonts/LCD-N___.TTF");
+}
+
 .header {
   background: #09996e;
   width: 100%;
@@ -13,16 +18,22 @@
 }
 
 .content {
-  background-color: #0096ff;
-  margin-top: 70px;
+  background-color: #4c4c4c;
+  margin-top: 40px;
   box-shadow: 0px 0px 10px 1px black;
   border: 1px solid black;
   padding: 10px;
   border-radius: 2%;
+  min-height: 250px;
+}
+
+.content h1 {
+  font-family: "Fjalla One", sans-serif;
 }
 
 .buspic {
   margin-bottom: 5px;
+  color: #d48a00;
 }
 
 .visiblestops {
@@ -37,7 +48,10 @@
 }
 
 body {
-  background-color: #016ab4;
+  background: url("./Img/bckk2.png");
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-color: #161616;
 }
 
 .settings {
@@ -48,8 +62,36 @@ body {
   width: 170px;
 }
 
+input[type="text"],
+textarea {
+  background-color: #919191;
+  border: 1px solid black;
+}
+
+input[type="text"]:focus {
+  outline: none;
+}
+
+.nobusses a {
+  color: #d48a00;
+}
+
 .nobusses img {
   margin-top: 5px;
+}
+
+.loadercontainer {
+  display: inline-block;
+  height: 18px;
+}
+
+.loadingspinner {
+  color: #d48a00;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
 }
 
 .settings ul {
@@ -62,33 +104,42 @@ body {
 }
 
 .incomingbusses {
-  display: flex;
-  flex-direction: column;
-  list-style-type: none;
-  padding: 0;
+  background-color: #1e1e1e;
+  margin: 0px auto;
+  border-spacing: 3px;
+  width: 75%;
+  font-family: lcd, Fallback, sans-serif;
+  font-size: 0.85em;
+  margin-bottom: 3px;
 }
 
-.incomingbusses p {
-  display: inline;
+.bustableinfo {
+  color: #f4f4f4;
 }
 
 .bus {
-  background-color: #00bcd43d;
+  background-color: #333333;
+  margin-top: 10px;
+  color: #d48a00;
   margin-bottom: 1px;
   border: 1px solid black;
 }
 
 .bus.departing {
-  background-color: #00e2ff85;
+  background-color: #515151;
 }
 
 .stopname {
+  font-size: 1.05em;
   margin-top: 3px;
-  font-weight: bold;
+  color: #d48a00;
+  background-color: #333333;
+  border: 1px solid #1e1e1e;
 }
 
 .stopslist {
-  background-color: lightskyblue;
+  background-color: #919191;
+  border-bottom: 1px solid black;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -99,10 +150,12 @@ body {
   margin-top: 5px;
   display: inline-flex;
   flex-wrap: wrap;
+  margin-bottom: 5px;
 }
 
 .busdot {
-  background-color: #09996e;
+  background-color: #333333;
+  color: #d48a00;
   cursor: pointer;
   min-width: 30px;
   margin-left: 2px;
@@ -119,8 +172,8 @@ body {
 }
 
 .busdot.passive {
-  text-decoration: line-through;
-  background-color: #004170;
+  color: #563700;
+  background-color: #282828;
 }
 
 .busdot:hover,
@@ -136,8 +189,4 @@ body {
 .stopslist:hover {
   background-color: #517890;
   cursor: pointer;
-}
-
-.stopinfo p {
-  margin: 0;
 }

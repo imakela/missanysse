@@ -18,54 +18,73 @@ const StopInfo = props => {
     }
   }
   return (
-    <div className="stopinfo">
-      <ul className="incomingbusses">
-        {anyBusses &&
-          _.range(bussesToShow.length).map(i => (
-            <li
-              key={i}
-              className={bussesToShow[i].onStop ? "bus departing" : "bus"}
-            >
-              <b>{bussesToShow[i].line} </b>
-              {bussesToShow[i].onStop ? (
-                <p>
-                  Departing in: <b>{bussesToShow[i].departingIn}</b>{" "}
-                </p>
-              ) : (
-                <p>
-                  Arriving in: <b>{bussesToShow[i].arrivingIn}</b>{" "}
-                </p>
-              )}
-              min, Distance:
-              {bussesToShow[i].onStop ? (
-                <b> At stop</b>
-              ) : (
-                <b> {bussesToShow[i].distance} m</b>
-              )}
-            </li>
-          ))}
-      </ul>
-      {!anyBusses &&
-        props.chosenStop !== null &&
-        !props.loading && (
-          <div className="nobusses">
-            <p>Sorry, no busses coming in a while...</p>
-            <img
-              src={require("../Img/2000px-Bus-logoZ.png")}
-              className="buspic"
-              alt="bus"
-              width="100"
-              height="100"
-            />
-            <p>
-              Check out full schedule and untracked busses for your stop at{" "}
-              <a href={scheduleLink} target="_blank">
-                Lissu
-              </a>
-            </p>
-          </div>
+    <div>
+      <div className="loadercontainer">
+        {props.loading && (
+          <FontAwesome name="spinner fa-spin" className="loadingspinner" />
         )}
-      {props.loading && <FontAwesome name="spinner fa-spin" size="2x" />}
+      </div>
+      <div className="stopinfo">
+        <table className="incomingbusses">
+          {anyBusses && (
+            <tbody>
+              <tr className="bustableinfo">
+                <th>Line</th>
+                <th>Min</th>
+                <th>Distance</th>
+              </tr>
+              {_.range(bussesToShow.length).map(i => (
+                <tr
+                  key={i}
+                  className={bussesToShow[i].onStop ? "bus departing" : "bus"}
+                >
+                  <th>
+                    <b>{bussesToShow[i].line} </b>
+                  </th>
+                  {bussesToShow[i].onStop ? (
+                    <th>
+                      <b>{bussesToShow[i].departingIn}</b>
+                    </th>
+                  ) : (
+                    <th>
+                      <b>{bussesToShow[i].arrivingIn}</b>
+                    </th>
+                  )}
+                  {bussesToShow[i].onStop ? (
+                    <th>
+                      <b>At stop</b>
+                    </th>
+                  ) : (
+                    <th>
+                      <b>{bussesToShow[i].distance} m</b>
+                    </th>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          )}
+        </table>
+        {!anyBusses &&
+          props.chosenStop !== null &&
+          !props.loading && (
+            <div className="nobusses">
+              <p>Sorry, no busses coming in a while...</p>
+              <img
+                src={require("../Img/2000px-Bus-logoZ.png")}
+                className="buspic"
+                alt="bus sleeping"
+                width="100"
+                height="100"
+              />
+              <p>
+                Check out full schedule and untracked busses for your stop at{" "}
+                <a href={scheduleLink} target="_blank">
+                  Lissu
+                </a>
+              </p>
+            </div>
+          )}
+      </div>
     </div>
   );
 };

@@ -10,6 +10,7 @@ const Settings = props => {
           placeholder={"Search and choose a stop"}
           className="searchfield"
           onKeyUp={e => props.stopSearch(e)}
+          style={{ backgroundcolor: "#a0a0a0" }}
         />
       </div>
       {props.visibleStops.length > 0 && (
