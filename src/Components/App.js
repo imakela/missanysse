@@ -1,7 +1,6 @@
 import React from "react";
 import FontAwesome from "react-fontawesome";
 import "../Styles/FontAwesome/css/font-awesome.css";
-import Header from "./Header";
 import Settings from "./Settings";
 import StopInfo from "./StopInfo";
 import Busses from "./Busses";
