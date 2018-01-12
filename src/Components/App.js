@@ -4,6 +4,7 @@ import "../Styles/FontAwesome/css/font-awesome.css";
 import Settings from "./Settings";
 import StopInfo from "./StopInfo";
 import Busses from "./Busses";
+import ErrorScreen from "./ErrorScreen";
 import distanceCalculator from "../Utils/distanceCalculator";
 import getAllStops from "../Utils/getAllStops";
 import getBussesForStop from "../Utils/getBussesForStop";
@@ -20,21 +21,34 @@ class App extends React.Component {
       busLines: [],
       visibleBusses: [],
       autoUpdate: false,
+      updating: false,
       firstLoad: true,
       loading: false,
-      error: false
+      error: false,
+      errorInfo: { error: "", type: "" }
     };
   }
 
   componentDidMount() {
-    getAllStops(allStops => {
-      if (allStops.length === 0) {
-        this.setState({ error: true });
-      } else {
-        this.setState({ stops: allStops });
-      }
-    });
+    getAllStops(this.setStops);
   }
+
+  setStops = allStops => {
+    if (allStops.error) {
+      this.setState(
+        {
+          error: true,
+          errorInfo: {
+            error: allStops.error,
+            type: allStops.type
+          }
+        },
+        this.handleError(allStops.type)
+      );
+    } else {
+      this.setState({ stops: allStops });
+    }
+  };
 
   componentDidUpdate() {
     if (!this.state.autoUpdate && !this.state.firstLoad) {
@@ -45,8 +59,16 @@ class App extends React.Component {
   initUpdating = () => {
     this.setState({ autoUpdate: true, loading: true }, () => {
       setTimeout(() => {
-        this.update();
-        this.initUpdating();
+        this.setState(
+          { updating: true },
+          getBussesForStop(
+            this.state.chosenStop.shortName,
+            this.showIncomingBusses
+          )
+        );
+        if (!this.state.error) {
+          this.initUpdating();
+        }
       }, 15000);
     });
   };
@@ -117,7 +139,16 @@ class App extends React.Component {
   showIncomingBusses = busses => {
     if (busses !== undefined) {
       if (busses.error) {
-        this.setState({ error: true });
+        this.setState(
+          {
+            error: true,
+            errorInfo: {
+              error: busses.error,
+              type: busses.type
+            }
+          },
+          this.handleError(busses.type)
+        );
         return;
       }
       for (let i = busses.length - 1; i >= 0; i--) {
@@ -129,17 +160,38 @@ class App extends React.Component {
       }
       this.orderInArrival(busses);
       const uniqBusses = uniqueBusses(busses);
-      this.setState({
-        incomingBusses: busses,
-        busLines: uniqBusses,
-        visibleBusses: uniqBusses,
-        error: false,
-        loading: false
-      });
+      if (!this.state.updating) {
+        this.setState({
+          incomingBusses: busses,
+          busLines: uniqBusses,
+          visibleBusses: uniqBusses,
+          error: false,
+          errorInfo: { error: "", type: "" },
+          loading: false
+        });
+      } else {
+        this.setState(
+          prevState => ({
+            incomingBusses: busses,
+            busLines: uniqBusses,
+            visibleBusses: this.addNewVisible(
+              uniqBusses,
+              prevState.busLines,
+              prevState.visibleBusses
+            ),
+            error: false,
+            errorInfo: { error: "", type: "" },
+            loading: false,
+            updating: false
+          }),
+          this.cleanUpVisibleBusses
+        );
+      }
     } else {
       this.setState({
         incomingBusses: [],
         visibleBusses: [],
+        updating: false,
         busLines: [],
         loading: false
       });
@@ -152,7 +204,9 @@ class App extends React.Component {
         chosenStop: stop,
         visibleStops: [],
         firstLoad: false,
-        loading: true
+        loading: true,
+        error: false,
+        errorInfo: { error: "", type: "" }
       },
       getBussesForStop(stop.shortName, this.showIncomingBusses)
     );
@@ -185,44 +239,19 @@ class App extends React.Component {
     );
   };
 
-  update = () => {
-    getBussesForStop(this.state.chosenStop.shortName, busses => {
-      if (busses !== undefined) {
-        if (busses.error) {
-          this.setState({ error: true });
-          return;
-        }
-        for (let i = busses.length - 1; i >= 0; i--) {
-          this.getDistances(busses[i]);
-          this.getTimeDifference(busses[i]);
-          if (busses[i].arrivingIn < -7) {
-            busses.splice(i, 1);
-          }
-        }
-        this.orderInArrival(busses);
-        const uniqBusses = uniqueBusses(busses);
-        this.setState(
-          prevState => ({
-            incomingBusses: busses,
-            busLines: uniqBusses,
-            visibleBusses: this.addNewVisible(
-              uniqBusses,
-              prevState.busLines,
-              prevState.visibleBusses
-            ),
-            error: false,
-            loading: false
-          }),
-          this.cleanUpVisibleBusses
+  handleError = error => {
+    if (error === "stops") {
+      setTimeout(() => {
+        getAllStops(this.setStops);
+      }, 5000);
+    } else if (error === "busses") {
+      setTimeout(() => {
+        getBussesForStop(
+          this.state.chosenStop.shortName,
+          this.showIncomingBusses
         );
-      } else {
-        this.setState({
-          incomingBusses: [],
-          busLines: [],
-          loading: false
-        });
-      }
-    });
+      }, 5000);
+    }
   };
 
   render() {
@@ -230,12 +259,14 @@ class App extends React.Component {
       <div className="App">
         {!this.state.error ? (
           <div className="content">
-            <Settings
-              stopSearch={this.stopSearch}
-              visibleStops={this.state.visibleStops}
-              chosenStop={this.state.chosenStop}
-              chooseStop={this.chooseStop}
-            />
+            {this.state.errorInfo.type !== "stops" && (
+              <Settings
+                stopSearch={this.stopSearch}
+                visibleStops={this.state.visibleStops}
+                chosenStop={this.state.chosenStop}
+                chooseStop={this.chooseStop}
+              />
+            )}
             <Busses
               incomingBusses={this.state.incomingBusses}
               busLines={this.state.busLines}
@@ -243,23 +274,22 @@ class App extends React.Component {
               chosenStop={this.state.chosenStop}
               setVisibleBusses={this.setVisibleBusses}
             />
-            <StopInfo
-              chosenStop={this.state.chosenStop}
-              incomingBusses={this.state.incomingBusses}
-              visibleBusses={this.state.visibleBusses}
-              loading={this.state.loading}
-            />
-            {this.state.firstLoad && (
-              <div>
+            {!this.state.firstLoad ? (
+              <StopInfo
+                chosenStop={this.state.chosenStop}
+                incomingBusses={this.state.incomingBusses}
+                visibleBusses={this.state.visibleBusses}
+                loading={this.state.loading}
+              />
+            ) : (
+              <div className="startscreen">
                 <h1>Missä Nysse?</h1>
                 <FontAwesome className="buspic" name="bus" size="5x" />
               </div>
             )}
           </div>
         ) : (
-          <div className="content">
-            <p>There seems to be a problem, retrying...</p>
-          </div>
+          <ErrorScreen errorInfo={this.state.errorInfo} />
         )}
       </div>
     );

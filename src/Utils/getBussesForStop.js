@@ -48,11 +48,17 @@ const getBussesForStop = (stop, callback) => {
           callback(undefined);
         }
       } else {
-        callback({ error: busObject.status });
+        callback({
+          error: "Failed to fetch busses for stop.",
+          type: "busses"
+        });
       }
     } else {
       console.log(error);
-      callback({ error: error });
+      callback({
+        error: "Failed to fetch busses for stop.",
+        type: "busses"
+      });
     }
   });
 };

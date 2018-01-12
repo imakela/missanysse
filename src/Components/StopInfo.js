@@ -8,7 +8,9 @@ const StopInfo = props => {
   const bussesToShow = [];
   const scheduleLink =
     props.chosenStop !== null
-      ? "https://lissu.tampere.fi/?stop=" + props.chosenStop.shortName
+      ? "http://aikataulut.tampere.fi/?stop=" +
+        props.chosenStop.shortName +
+        "&mobile=1"
       : "";
   if (anyBusses) {
     for (let i = 0; i < props.incomingBusses.length; i++) {
@@ -77,9 +79,9 @@ const StopInfo = props => {
                 height="100"
               />
               <p>
-                Check out full schedule and untracked busses for your stop at{" "}
+                Check out full schedule and untracked busses for your stop{" "}
                 <a href={scheduleLink} target="_blank">
-                  Lissu
+                  Here
                 </a>
               </p>
             </div>

@@ -4,7 +4,7 @@ const _ = require("lodash");
 const Busses = props => {
   const stop =
     props.chosenStop !== null
-      ? props.chosenStop.name + "(" + props.chosenStop.shortName + ")"
+      ? props.chosenStop.name + " (" + props.chosenStop.shortName + ")"
       : "";
   const anyBusses = props.incomingBusses.length > 0 ? true : false;
   return (

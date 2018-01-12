@@ -20,7 +20,10 @@ const getAllStops = callback => {
       callback(allStops);
     } else {
       console.log(error);
-      callback([]);
+      callback({
+        error: "Failed to load stops from API.",
+        type: "stops"
+      });
     }
   });
 };

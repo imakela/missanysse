@@ -3,20 +3,6 @@
   src: url("./Styles/Fonts/LCD-N___.TTF");
 }
 
-.header {
-  background: #09996e;
-  width: 100%;
-  position: absolute;
-  height: 55px;
-  top: 0px;
-  left: 0px;
-}
-
-.header h1 {
-  font-family: "Fjalla One", sans-serif;
-  margin-top: 10px;
-}
-
 .content {
   background-color: #4c4c4c;
   margin-top: 40px;
@@ -25,10 +11,6 @@
   padding: 10px;
   border-radius: 2%;
   min-height: 250px;
-}
-
-.content h1 {
-  font-family: "Fjalla One", sans-serif;
 }
 
 .buspic {
@@ -72,8 +54,21 @@ input[type="text"]:focus {
   outline: none;
 }
 
+.nobusses {
+  margin: 0 auto;
+  width: 85%;
+  background-color: #333333;
+  border: 6px solid #1e1e1e;
+}
+
+.nobusses p {
+  margin-top: 0;
+  color: #d48a00;
+}
+
 .nobusses a {
   color: #d48a00;
+  font-weight: bold;
 }
 
 .nobusses img {
@@ -103,12 +98,30 @@ input[type="text"]:focus {
   overflow-y: scroll;
 }
 
+.startscreen {
+  background-color: #333333;
+  border: 6px solid #1e1e1e;
+}
+
+.error {
+  margin: 0 auto;
+  margin-top: 30px;
+  background-color: #333333;
+  border: 6px solid #1e1e1e;
+  width: 80%;
+  color: #d48a00;
+  text-align: center;
+}
+.startscreen h1 {
+  font-family: "Fjalla One", sans-serif;
+}
+
 .incomingbusses {
   background-color: #1e1e1e;
   margin: 0px auto;
   border-spacing: 3px;
-  width: 75%;
-  font-family: lcd, Fallback, sans-serif;
+  width: 80%;
+  font-family: lcd, sans-serif;
   font-size: 0.85em;
   margin-bottom: 3px;
 }
@@ -187,6 +200,6 @@ input[type="text"]:focus {
 }
 
 .stopslist:hover {
-  background-color: #517890;
+  background-color: #d48a00;
   cursor: pointer;
 }
