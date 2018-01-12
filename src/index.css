@@ -3,26 +3,6 @@
   src: url("./Styles/Fonts/LCD-N___.TTF");
 }
 
-.content {
-  background-color: #4c4c4c;
-  margin-top: 40px;
-  box-shadow: 0px 0px 10px 1px black;
-  border: 1px solid black;
-  padding: 10px;
-  border-radius: 2%;
-  min-height: 250px;
-}
-
-.buspic {
-  margin-bottom: 5px;
-  color: #d48a00;
-}
-
-.visiblestops {
-  position: absolute;
-  width: 174px;
-}
-
 .App {
   margin: auto;
   text-align: center;
@@ -32,102 +12,8 @@
 body {
   background: url("./Img/bckk2.png");
   background-repeat: no-repeat;
-  background-position-x: center;
+  background-position-x: 51%;
   background-color: #161616;
-}
-
-.settings {
-  display: inline-block;
-}
-
-.settings input {
-  width: 170px;
-}
-
-input[type="text"],
-textarea {
-  background-color: #919191;
-  border: 1px solid black;
-}
-
-input[type="text"]:focus {
-  outline: none;
-}
-
-.nobusses {
-  margin: 0 auto;
-  width: 85%;
-  background-color: #333333;
-  border: 6px solid #1e1e1e;
-}
-
-.nobusses p {
-  margin-top: 0;
-  color: #d48a00;
-}
-
-.nobusses a {
-  color: #d48a00;
-  font-weight: bold;
-}
-
-.nobusses img {
-  margin-top: 5px;
-}
-
-.loadercontainer {
-  display: inline-block;
-  height: 18px;
-}
-
-.loadingspinner {
-  color: #d48a00;
-  position: absolute;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
-}
-
-.settings ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  max-height: 200px;
-  overflow: hidden;
-  overflow-y: scroll;
-}
-
-.startscreen {
-  background-color: #333333;
-  border: 6px solid #1e1e1e;
-}
-
-.error {
-  margin: 0 auto;
-  margin-top: 30px;
-  background-color: #333333;
-  border: 6px solid #1e1e1e;
-  width: 80%;
-  color: #d48a00;
-  text-align: center;
-}
-.startscreen h1 {
-  font-family: "Fjalla One", sans-serif;
-}
-
-.incomingbusses {
-  background-color: #1e1e1e;
-  margin: 0px auto;
-  border-spacing: 3px;
-  width: 80%;
-  font-family: lcd, sans-serif;
-  font-size: 0.85em;
-  margin-bottom: 3px;
-}
-
-.bustableinfo {
-  color: #f4f4f4;
 }
 
 .bus {
@@ -140,30 +26,6 @@ input[type="text"]:focus {
 
 .bus.departing {
   background-color: #515151;
-}
-
-.stopname {
-  font-size: 1.05em;
-  margin-top: 3px;
-  color: #d48a00;
-  background-color: #333333;
-  border: 1px solid #1e1e1e;
-}
-
-.stopslist {
-  background-color: #919191;
-  border-bottom: 1px solid black;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.busicons {
-  margin-top: 5px;
-  display: inline-flex;
-  flex-wrap: wrap;
-  margin-bottom: 5px;
 }
 
 .busdot {
@@ -199,7 +61,146 @@ input[type="text"]:focus {
   outline-color: white;
 }
 
+.busicons {
+  margin-top: 5px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
+}
+
+.buspic {
+  margin-bottom: 5px;
+  color: #d48a00;
+}
+
+.bustableinfo {
+  color: #f4f4f4;
+}
+
+.content {
+  background-color: #4c4c4c;
+  margin-top: 40px;
+  box-shadow: 0px 0px 10px 1px black;
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 2%;
+  min-height: 250px;
+}
+
+.error {
+  margin: 0 auto;
+  margin-top: 30px;
+  background-color: #333333;
+  border: 6px solid #1e1e1e;
+  width: 80%;
+  color: #d48a00;
+  text-align: center;
+}
+
+.incomingbusses {
+  background-color: #1e1e1e;
+  margin: 0px auto;
+  border-spacing: 3px;
+  width: 80%;
+  font-family: lcd, sans-serif;
+  font-size: 0.85em;
+  margin-bottom: 3px;
+}
+
+input[type="text"],
+textarea {
+  background-color: #919191;
+  border: 1px solid black;
+}
+
+input[type="text"]:focus {
+  outline: none;
+}
+
+.loadercontainer {
+  display: inline-block;
+  height: 18px;
+}
+
+.loadingspinner {
+  color: #d48a00;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+}
+
+.nobusses {
+  margin: 0 auto;
+  width: 85%;
+  background-color: #333333;
+  border: 6px solid #1e1e1e;
+}
+
+.nobusses p {
+  margin-top: 0;
+  color: #d48a00;
+}
+
+.nobusses a {
+  color: #d48a00;
+  font-weight: bold;
+}
+
+.nobusses img {
+  margin-top: 5px;
+}
+
+.settings {
+  display: inline-block;
+}
+
+.settings input {
+  width: 170px;
+}
+
+.settings ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.startscreen {
+  background-color: #333333;
+  border: 6px solid #1e1e1e;
+}
+
+.startscreen h1 {
+  font-family: "Fjalla One", sans-serif;
+}
+
+.stopname {
+  font-size: 1.05em;
+  margin-top: 3px;
+  color: #d48a00;
+  background-color: #333333;
+  border: 1px solid #1e1e1e;
+}
+
+.stopslist {
+  background-color: #919191;
+  border-bottom: 1px solid black;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .stopslist:hover {
   background-color: #d48a00;
   cursor: pointer;
+}
+
+.visiblestops {
+  position: absolute;
+  width: 174px;
 }
