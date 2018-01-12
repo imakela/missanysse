@@ -51,16 +51,16 @@ class App extends React.Component {
   };
 
   componentDidUpdate() {
-    if (!this.state.autoUpdate && !this.state.firstLoad) {
+    if (!this.state.autoUpdate && !this.state.firstLoad && !this.state.error) {
       this.initUpdating();
     }
   }
 
   initUpdating = () => {
-    this.setState({ autoUpdate: true, loading: true }, () => {
-      setTimeout(() => {
+    this.setState({ autoUpdate: true }, () => {
+      let update = setTimeout(() => {
         this.setState(
-          { updating: true },
+          { updating: true, loading: true },
           getBussesForStop(
             this.state.chosenStop.shortName,
             this.showIncomingBusses
@@ -68,6 +68,8 @@ class App extends React.Component {
         );
         if (!this.state.error) {
           this.initUpdating();
+        } else {
+          clearTimeout(update);
         }
       }, 15000);
     });
@@ -145,7 +147,9 @@ class App extends React.Component {
             errorInfo: {
               error: busses.error,
               type: busses.type
-            }
+            },
+            autoUpdate: false,
+            loading: false
           },
           this.handleError(busses.type)
         );
@@ -241,16 +245,20 @@ class App extends React.Component {
 
   handleError = error => {
     if (error === "stops") {
-      setTimeout(() => {
-        getAllStops(this.setStops);
-      }, 5000);
+      if (this.state.error) {
+        setTimeout(() => {
+          getAllStops(this.setStops);
+        }, 5000);
+      }
     } else if (error === "busses") {
-      setTimeout(() => {
-        getBussesForStop(
-          this.state.chosenStop.shortName,
-          this.showIncomingBusses
-        );
-      }, 5000);
+      if (this.state.error) {
+        setTimeout(() => {
+          getBussesForStop(
+            this.state.chosenStop.shortName,
+            this.showIncomingBusses
+          );
+        }, 5000);
+      }
     }
   };
 
@@ -259,14 +267,12 @@ class App extends React.Component {
       <div className="App">
         {!this.state.error ? (
           <div className="content">
-            {this.state.errorInfo.type !== "stops" && (
-              <Settings
-                stopSearch={this.stopSearch}
-                visibleStops={this.state.visibleStops}
-                chosenStop={this.state.chosenStop}
-                chooseStop={this.chooseStop}
-              />
-            )}
+            <Settings
+              stopSearch={this.stopSearch}
+              visibleStops={this.state.visibleStops}
+              chosenStop={this.state.chosenStop}
+              chooseStop={this.chooseStop}
+            />
             <Busses
               incomingBusses={this.state.incomingBusses}
               busLines={this.state.busLines}
@@ -289,7 +295,13 @@ class App extends React.Component {
             )}
           </div>
         ) : (
-          <ErrorScreen errorInfo={this.state.errorInfo} />
+          <ErrorScreen
+            errorInfo={this.state.errorInfo}
+            stopSearch={this.stopSearch}
+            visibleStops={this.state.visibleStops}
+            chosenStop={this.state.chosenStop}
+            chooseStop={this.chooseStop}
+          />
         )}
       </div>
     );
