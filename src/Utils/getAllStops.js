@@ -3,7 +3,7 @@ var request = require("request");
 const getAllStops = callback => {
   let stopsObject;
   let allStops = [];
-  let stopReq = "http://data.itsfactory.fi/journeys/api/1/stop-points";
+  let stopReq = "https://limitless-depths-27510.herokuapp.com/stop-points";
   request(stopReq, { timeout: 5000 }, (error, response, body) => {
     if (!error) {
       stopsObject = JSON.parse(body);

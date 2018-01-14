@@ -18,7 +18,7 @@ const getNested = (theObject, path, separator) => {
 
 const getBussesForStop = (stop, callback) => {
   let busRequest =
-    "http://data.itsfactory.fi/journeys/api/1/stop-monitoring?stops=" + stop;
+    "https://limitless-depths-27510.herokuapp.com/stop-monitoring/" + stop;
   let busObject;
   let bussesForStop = [];
   let bus;
