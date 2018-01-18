@@ -7,7 +7,7 @@ const getAllStops = callback => {
   request(stopReq, { timeout: 5000 }, (error, response, body) => {
     if (!error) {
       stopsObject = JSON.parse(body);
-      console.log("All stops request object: ", stopsObject);
+      //console.log("All stops request object: ", stopsObject);
       let stop;
       for (let i = 0; i < stopsObject.body.length; i++) {
         stop = {
@@ -19,7 +19,7 @@ const getAllStops = callback => {
       }
       callback(allStops);
     } else {
-      console.log(error);
+      //console.log(error);
       callback({
         error: "Failed to load stops from API.",
         type: "stops"

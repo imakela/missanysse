@@ -25,7 +25,7 @@ const getBussesForStop = (stop, callback) => {
   request(busRequest, { timeout: 5000 }, (error, response, body) => {
     if (!error) {
       busObject = JSON.parse(body);
-      console.log("Incoming busses request: ", busObject);
+      //console.log("Incoming busses request: ", busObject);
       if (busObject.status !== "error") {
         let path = "body." + stop;
         let arr = getNested(busObject, path);
@@ -54,7 +54,7 @@ const getBussesForStop = (stop, callback) => {
         });
       }
     } else {
-      console.log(error);
+      //console.log(error);
       callback({
         error: "Failed to fetch busses for stop.",
         type: "busses"

@@ -15,6 +15,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       stops: [],
+      stopsLoaded: false,
       visibleStops: [],
       chosenStop: null,
       incomingBusses: [],
@@ -46,7 +47,7 @@ class App extends React.Component {
         this.handleError(allStops.type)
       );
     } else {
-      this.setState({ stops: allStops });
+      this.setState({ stops: allStops, stopsLoaded: true });
     }
   };
 
@@ -71,7 +72,7 @@ class App extends React.Component {
         } else {
           clearTimeout(update);
         }
-      }, 15000);
+      }, 12000);
     });
   };
 
@@ -125,10 +126,6 @@ class App extends React.Component {
   };
 
   getDistances = bus => {
-    if (bus.onStop) {
-      bus.distance = 0;
-      return;
-    }
     const stopLocation = this.state.chosenStop.location;
     const stopLocationSplit = stopLocation.split(",");
     const stopLocObj = {
@@ -178,11 +175,6 @@ class App extends React.Component {
           prevState => ({
             incomingBusses: busses,
             busLines: uniqBusses,
-            visibleBusses: this.addNewVisible(
-              uniqBusses,
-              prevState.busLines,
-              prevState.visibleBusses
-            ),
             error: false,
             errorInfo: { error: "", type: "" },
             loading: false,
@@ -217,30 +209,30 @@ class App extends React.Component {
   };
 
   setVisibleBusses = line => {
-    this.setState(prevState => ({
-      visibleBusses:
-        prevState.visibleBusses.indexOf(line) > -1
-          ? prevState.visibleBusses.filter(
-              (_, i) => prevState.visibleBusses[i] !== line
-            )
-          : prevState.visibleBusses.concat([line])
-    }));
-  };
-
-  cleanUpVisibleBusses = () => {
-    if (this.state.busLines.length < this.state.visibleBusses.length) {
+    if (this.state.visibleBusses.length === this.state.busLines.length) {
       this.setState(prevState => ({
-        visibleBusses: prevState.visibleBusses.filter(
-          (_, i) => prevState.busLines.indexOf(prevState.visibleBusses[i]) > -1
-        )
+        visibleBusses: prevState.visibleBusses.filter(bus => bus === line)
+      }));
+    } else if (this.state.visibleBusses.indexOf(line) < 0) {
+      this.setState(prevState => ({
+        visibleBusses: prevState.visibleBusses.concat([line])
+      }));
+    } else {
+      this.setState(prevState => ({
+        visibleBusses:
+          prevState.visibleBusses.length !== 1
+            ? prevState.visibleBusses.filter(bus => bus !== line)
+            : prevState.busLines
       }));
     }
   };
 
-  addNewVisible = (busses, prevBusses, visibleBusses) => {
-    return visibleBusses.concat(
-      busses.filter(bus => prevBusses.indexOf(bus) < 0)
-    );
+  cleanUpVisibleBusses = () => {
+    this.setState(prevState => ({
+      visibleBusses: prevState.visibleBusses.filter(
+        (_, i) => prevState.busLines.indexOf(prevState.visibleBusses[i]) > -1
+      )
+    }));
   };
 
   handleError = error => {
@@ -262,23 +254,34 @@ class App extends React.Component {
     }
   };
 
+  hideStopList = () => {
+    if (this.state.visibleStops.length > 0) {
+      this.setState({ visibleStops: [] });
+    }
+  };
+
   render() {
     return (
       <div className="App">
         {!this.state.error ? (
           <div className="content">
-            <Settings
-              stopSearch={this.stopSearch}
-              visibleStops={this.state.visibleStops}
-              chosenStop={this.state.chosenStop}
-              chooseStop={this.chooseStop}
-            />
+            {this.state.stopsLoaded ? (
+              <Settings
+                stopSearch={this.stopSearch}
+                visibleStops={this.state.visibleStops}
+                chosenStop={this.state.chosenStop}
+                chooseStop={this.chooseStop}
+              />
+            ) : (
+              <FontAwesome name="spinner fa-spin" className="stoploader" />
+            )}
             <Busses
               incomingBusses={this.state.incomingBusses}
               busLines={this.state.busLines}
               visibleBusses={this.state.visibleBusses}
               chosenStop={this.state.chosenStop}
               setVisibleBusses={this.setVisibleBusses}
+              hideStopList={this.hideStopList}
             />
             {!this.state.firstLoad ? (
               <StopInfo
@@ -286,9 +289,10 @@ class App extends React.Component {
                 incomingBusses={this.state.incomingBusses}
                 visibleBusses={this.state.visibleBusses}
                 loading={this.state.loading}
+                hideStopList={this.hideStopList}
               />
             ) : (
-              <div className="startscreen">
+              <div className="startscreen" onClick={() => this.hideStopList()}>
                 <h1>Missä Nysse?</h1>
                 <FontAwesome className="buspic" name="bus" size="5x" />
               </div>
@@ -301,6 +305,7 @@ class App extends React.Component {
             visibleStops={this.state.visibleStops}
             chosenStop={this.state.chosenStop}
             chooseStop={this.chooseStop}
+            hideStopList={this.hideStopList}
           />
         )}
       </div>

@@ -6,7 +6,7 @@ import Settings from "./Settings";
 const ErrorScreen = props => {
   const fatal = props.errorInfo.type === "busses" ? false : true;
   return (
-    <div className="content">
+    <div className="content" onClick={() => props.hideStopList()}>
       {!fatal && (
         <Settings
           stopSearch={props.stopSearch}

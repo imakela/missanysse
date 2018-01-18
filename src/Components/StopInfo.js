@@ -20,7 +20,7 @@ const StopInfo = props => {
     }
   }
   return (
-    <div>
+    <div onClick={() => props.hideStopList()}>
       <div className="loadercontainer">
         {props.loading && (
           <FontAwesome name="spinner fa-spin" className="loadingspinner" />
