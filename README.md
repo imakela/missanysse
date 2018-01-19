@@ -6,7 +6,7 @@
 2. App lists all tracked busses that are arriving in 30 minutes. Click busline squares to see only the busses that you want to.
 
 ### Installation
-1. Clone or download repository.
+1. Clone or download repository
 2. npm install
 3. npm start
 4. Open http://localhost:3000/ in browser
