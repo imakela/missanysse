@@ -8,7 +8,7 @@ const getNested = (theObject, path, separator) => {
       .replace("[", separator)
       .replace("]", "")
       .split(separator)
-      .reduce(function(obj, property) {
+      .reduce((obj, property) => {
         return obj[property];
       }, theObject);
   } catch (err) {

@@ -1,5 +1,5 @@
 import React from "react";
-var _ = require("lodash");
+const _ = require("lodash");
 
 const Settings = props => {
   return (

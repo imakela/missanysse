@@ -1,7 +1,7 @@
 import React from "react";
 import FontAwesome from "react-fontawesome";
 import "../Styles/FontAwesome/css/font-awesome.css";
-var _ = require("lodash");
+const _ = require("lodash");
 
 const StopInfo = props => {
   const anyBusses = props.incomingBusses.length > 0 ? true : false;

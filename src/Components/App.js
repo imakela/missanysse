@@ -146,7 +146,9 @@ class App extends React.Component {
               type: busses.type
             },
             autoUpdate: false,
-            loading: false
+            loading: false,
+            incomingBusses: [],
+            busLines: []
           },
           this.handleError(busses.type)
         );
@@ -175,6 +177,9 @@ class App extends React.Component {
           prevState => ({
             incomingBusses: busses,
             busLines: uniqBusses,
+            visibleBusses: prevState.error
+              ? uniqBusses
+              : prevState.visibleBusses,
             error: false,
             errorInfo: { error: "", type: "" },
             loading: false,
@@ -236,6 +241,7 @@ class App extends React.Component {
   };
 
   handleError = error => {
+    console.log(error);
     if (error === "stops") {
       if (this.state.error) {
         setTimeout(() => {
