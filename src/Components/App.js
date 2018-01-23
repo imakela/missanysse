@@ -187,20 +187,15 @@ class App extends React.Component {
           loading: false
         });
       } else {
-        this.setState(
-          prevState => ({
-            incomingBusses: busses,
-            busLines: uniqBusses,
-            visibleBusses: prevState.error
-              ? uniqBusses
-              : prevState.visibleBusses,
-            error: false,
-            errorInfo: { error: "", type: "" },
-            loading: false,
-            updating: false
-          }),
-          this.cleanUpVisibleBusses
-        );
+        this.setState(prevState => ({
+          incomingBusses: busses,
+          busLines: uniqBusses,
+          visibleBusses: prevState.error ? uniqBusses : prevState.visibleBusses,
+          error: false,
+          errorInfo: { error: "", type: "" },
+          loading: false,
+          updating: false
+        }));
       }
     } else {
       this.setState({
@@ -248,16 +243,7 @@ class App extends React.Component {
     }
   };
 
-  cleanUpVisibleBusses = () => {
-    this.setState(prevState => ({
-      visibleBusses: prevState.visibleBusses.filter(
-        (_, i) => prevState.busLines.indexOf(prevState.visibleBusses[i]) > -1
-      )
-    }));
-  };
-
   handleError = error => {
-    console.log(error);
     if (error === "stops") {
       if (this.state.error) {
         setTimeout(() => {
@@ -286,7 +272,7 @@ class App extends React.Component {
     return (
       <div className="App">
         {!this.state.error ? (
-          <div className="content">
+          <div className="content" onClick={() => this.hideStopList()}>
             {this.state.stopsLoaded ? (
               <Settings
                 stopSearch={this.stopSearch}
@@ -303,7 +289,6 @@ class App extends React.Component {
               visibleBusses={this.state.visibleBusses}
               chosenStop={this.state.chosenStop}
               setVisibleBusses={this.setVisibleBusses}
-              hideStopList={this.hideStopList}
             />
             {!this.state.firstLoad ? (
               <StopInfo
@@ -311,10 +296,9 @@ class App extends React.Component {
                 incomingBusses={this.state.incomingBusses}
                 visibleBusses={this.state.visibleBusses}
                 loading={this.state.loading}
-                hideStopList={this.hideStopList}
               />
             ) : (
-              <div className="startscreen" onClick={() => this.hideStopList()}>
+              <div className="startscreen">
                 <h1>Missä Nysse?</h1>
                 <FontAwesome className="buspic" name="bus" size="5x" />
               </div>
@@ -322,12 +306,12 @@ class App extends React.Component {
           </div>
         ) : (
           <ErrorScreen
+            onClick={() => this.hideStopList()}
             errorInfo={this.state.errorInfo}
             stopSearch={this.stopSearch}
             visibleStops={this.state.visibleStops}
             chosenStop={this.state.chosenStop}
             chooseStop={this.chooseStop}
-            hideStopList={this.hideStopList}
           />
         )}
       </div>

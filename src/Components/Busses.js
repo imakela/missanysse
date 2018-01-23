@@ -8,7 +8,7 @@ const Busses = props => {
       : "";
   const anyBusses = props.incomingBusses.length > 0 ? true : false;
   return (
-    <div onClick={() => props.hideStopList()}>
+    <div>
       <div className="stopname">{stop}</div>
       <div className="busicons">
         {anyBusses &&
