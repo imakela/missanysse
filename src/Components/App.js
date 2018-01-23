@@ -1,5 +1,6 @@
 import React from "react";
 import FontAwesome from "react-fontawesome";
+import Cookies from "js-cookie";
 import "../Styles/FontAwesome/css/font-awesome.css";
 import Settings from "./Settings";
 import StopInfo from "./StopInfo";
@@ -47,7 +48,10 @@ class App extends React.Component {
         this.handleError(allStops.type)
       );
     } else {
-      this.setState({ stops: allStops, stopsLoaded: true });
+      this.setState(
+        { stops: allStops, stopsLoaded: true },
+        this.checkForPrevious
+      );
     }
   };
 
@@ -56,6 +60,16 @@ class App extends React.Component {
       this.initUpdating();
     }
   }
+
+  checkForPrevious = () => {
+    if (Cookies.get("previous") !== undefined) {
+      let prev = JSON.parse(Cookies.get("previous"));
+      this.setState(
+        { chosenStop: prev, firstLoad: false, loading: true },
+        getBussesForStop(prev.shortName, this.showIncomingBusses)
+      );
+    }
+  };
 
   initUpdating = () => {
     this.setState({ autoUpdate: true }, () => {
@@ -200,6 +214,8 @@ class App extends React.Component {
   };
 
   chooseStop = stop => {
+    let halfHour = 1 / 48;
+    Cookies.set("previous", stop, { expires: halfHour });
     this.setState(
       {
         chosenStop: stop,
