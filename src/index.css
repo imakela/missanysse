@@ -83,6 +83,7 @@ body {
   box-shadow: 0px 0px 10px 1px black;
   border: 1px solid black;
   padding: 10px;
+  padding-top: 2px;
   border-radius: 2%;
   min-height: 250px;
 }
@@ -105,6 +106,10 @@ body {
   font-family: lcd, sans-serif;
   font-size: 0.85em;
   margin-bottom: 3px;
+}
+
+input[type="text"] {
+  margin-top: 1px;
 }
 
 input[type="text"],
@@ -135,6 +140,32 @@ input[type="text"]::placeholder {
   right: 0;
 }
 
+.modebutton {
+  width: 106px;
+  float: right;
+  background-color: #333333;
+  border: 1px solid black;
+  text-align: center;
+  color: #d48a00;
+  font-size: 0.7em;
+  -webkit-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+}
+
+.modebutton:active {
+  box-shadow: 0px 0px 5px 0px black;
+}
+
+.modebutton:hover {
+  background-color: #d48a00;
+  color: white;
+  cursor: pointer;
+}
+
+.modebutton:focus {
+  outline: 0;
+}
+
 .nobusses {
   margin: 0 auto;
   width: 85%;
@@ -156,12 +187,29 @@ input[type="text"]::placeholder {
   margin-top: 5px;
 }
 
+option[value=""][disabled] {
+  display: none;
+}
+
+option {
+  background-color: #919191;
+}
+
+select {
+  text-align: center;
+  background-color: #919191;
+  font-size: 0.7em;
+  border: 1px solid black;
+  width: 160px;
+  height: 19px;
+}
+
 .settings {
   display: inline-block;
 }
 
 .settings input {
-  width: 170px;
+  width: 158px;
 }
 
 .settings ul {
@@ -183,6 +231,7 @@ input[type="text"]::placeholder {
 }
 
 .stoploader {
+  margin-top: 2px;
   color: #d48a00;
 }
 
@@ -195,6 +244,7 @@ input[type="text"]::placeholder {
 }
 
 .stopslist {
+  font-size: 0.9em;
   background-color: #919191;
   border-bottom: 1px solid black;
   -webkit-user-select: none;
@@ -211,5 +261,5 @@ input[type="text"]::placeholder {
 .visiblestops {
   z-index: 999;
   position: absolute;
-  width: 174px;
+  width: 159px;
 }

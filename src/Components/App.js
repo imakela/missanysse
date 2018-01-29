@@ -6,10 +6,16 @@ import Settings from "./Settings";
 import StopInfo from "./StopInfo";
 import Busses from "./Busses";
 import ErrorScreen from "./ErrorScreen";
+import CloseStops from "./CloseStops";
+import ModeButton from "./ModeButton";
+import getUserLocation from "../Utils/getUserLocation";
+import getTimeDifference from "../Utils/getTimeDifference";
 import distanceCalculator from "../Utils/distanceCalculator";
 import getAllStops from "../Utils/getAllStops";
 import getBussesForStop from "../Utils/getBussesForStop";
 import uniqueBusses from "../Utils/uniqueBusses";
+import getClosestStops from "../Utils/getClosestStops";
+const _ = require("lodash");
 
 class App extends React.Component {
   constructor(props) {
@@ -26,6 +32,9 @@ class App extends React.Component {
       updating: false,
       firstLoad: true,
       loading: false,
+      userLocation: {},
+      closestStops: [],
+      mode: "search",
       error: false,
       errorInfo: { error: "", type: "" }
     };
@@ -34,6 +43,29 @@ class App extends React.Component {
   componentDidMount() {
     getAllStops(this.setStops);
   }
+
+  componentDidUpdate() {
+    if (!this.state.autoUpdate && !this.state.firstLoad && !this.state.error) {
+      this.initUpdating();
+    }
+  }
+
+  setLocation = loc => {
+    this.setState(
+      {
+        userLocation: loc
+      },
+      this.setClosestStops
+    );
+  };
+
+  setClosestStops = () => {
+    if (!this.state.userLocation.error) {
+      this.setState({
+        closestStops: getClosestStops(this.state.stops, this.state.userLocation)
+      });
+    }
+  };
 
   setStops = allStops => {
     if (allStops.error) {
@@ -49,17 +81,14 @@ class App extends React.Component {
       );
     } else {
       this.setState(
-        { stops: allStops, stopsLoaded: true },
+        {
+          stops: allStops,
+          stopsLoaded: true
+        },
         this.checkForPrevious
       );
     }
   };
-
-  componentDidUpdate() {
-    if (!this.state.autoUpdate && !this.state.firstLoad && !this.state.error) {
-      this.initUpdating();
-    }
-  }
 
   checkForPrevious = () => {
     if (Cookies.get("previous") !== undefined) {
@@ -69,6 +98,7 @@ class App extends React.Component {
         getBussesForStop(prev.shortName, this.showIncomingBusses)
       );
     }
+    getUserLocation(this.setLocation);
   };
 
   initUpdating = () => {
@@ -114,25 +144,6 @@ class App extends React.Component {
     }
   };
 
-  getTimeDifference = bus => {
-    const today = new Date();
-    const arrival = new Date(bus.arrival);
-    const depart = new Date(bus.depart);
-    const arrivalDifference = arrival.getTime() - today.getTime();
-    const departDifference = depart.getTime() - today.getTime();
-    const arrivalInMinutes = Math.round(arrivalDifference / 60000);
-    const departInMinutes = Math.round(departDifference / 60000);
-    if (arrivalInMinutes < -7) {
-      bus.arrivingIn = arrivalInMinutes;
-    } else {
-      bus.arrivingIn = arrivalInMinutes < 0 ? 0 : arrivalInMinutes;
-    }
-    if (isNaN(bus.arrivingIn)) {
-      bus.arrivingIn = 0;
-    }
-    bus.departingIn = departInMinutes < 0 ? 0 : departInMinutes;
-  };
-
   orderInArrival = busses => {
     if (busses.length > 1) {
       busses.sort((a, b) => a.arrivingIn - b.arrivingIn);
@@ -170,7 +181,7 @@ class App extends React.Component {
       }
       for (let i = busses.length - 1; i >= 0; i--) {
         this.getDistances(busses[i]);
-        this.getTimeDifference(busses[i]);
+        getTimeDifference(busses[i]);
         if (busses[i].arrivingIn < -7) {
           busses.splice(i, 1);
         }
@@ -225,7 +236,9 @@ class App extends React.Component {
   };
 
   setVisibleBusses = line => {
-    if (this.state.visibleBusses.length === this.state.busLines.length) {
+    if (
+      _.difference(this.state.busLines, this.state.visibleBusses).length === 0
+    ) {
       this.setState(prevState => ({
         visibleBusses: prevState.visibleBusses.filter(bus => bus === line)
       }));
@@ -268,18 +281,43 @@ class App extends React.Component {
     }
   };
 
+  changeMode = () => {
+    this.setState(prevState => ({
+      mode: prevState.mode === "search" ? "closest" : "search"
+    }));
+  };
+
   render() {
     return (
       <div className="App">
         {!this.state.error ? (
           <div className="content" onClick={() => this.hideStopList()}>
             {this.state.stopsLoaded ? (
-              <Settings
-                stopSearch={this.stopSearch}
-                visibleStops={this.state.visibleStops}
-                chosenStop={this.state.chosenStop}
-                chooseStop={this.chooseStop}
-              />
+              <div style={{ display: "inline" }}>
+                {!this.state.userLocation.error &&
+                  this.state.closestStops.length > 0 && (
+                    <ModeButton
+                      mode={this.state.mode}
+                      changeMode={this.changeMode}
+                    />
+                  )}
+                <br style={{ clear: "both" }} />
+                {this.state.mode === "search" ? (
+                  <Settings
+                    stopSearch={this.stopSearch}
+                    visibleStops={this.state.visibleStops}
+                    chosenStop={this.state.chosenStop}
+                    chooseStop={this.chooseStop}
+                    closestStops={this.state.closestStops}
+                    userLocation={this.state.userLocation}
+                  />
+                ) : (
+                  <CloseStops
+                    closestStops={this.state.closestStops}
+                    chooseStop={this.chooseStop}
+                  />
+                )}
+              </div>
             ) : (
               <FontAwesome name="spinner fa-spin" className="stoploader" />
             )}
