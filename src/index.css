@@ -140,30 +140,38 @@ input[type="text"]::placeholder {
   right: 0;
 }
 
-.modebutton {
-  width: 106px;
+.modebuttons {
   float: right;
-  background-color: #333333;
-  border: 1px solid black;
-  text-align: center;
-  color: #d48a00;
-  font-size: 0.7em;
-  -webkit-transition-duration: 0.2s;
-  transition-duration: 0.2s;
+  color: black;
 }
 
-.modebutton:active {
-  box-shadow: 0px 0px 5px 0px black;
+.modesearch {
+  border-bottom: 2px solid #4c4c4c;
+  padding-bottom: 1px;
+  display: inline;
+  margin-right: 13px;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
-.modebutton:hover {
-  background-color: #d48a00;
-  color: white;
+.modesearch:hover,
+.modelocation:hover {
   cursor: pointer;
+  color: #d48a00;
 }
 
-.modebutton:focus {
-  outline: 0;
+.modesearch.active,
+.modelocation.active {
+  color: #d48a00;
+  border-bottom: 2px solid #d48a00;
+}
+
+.modelocation {
+  border-bottom: 2px solid #4c4c4c;
+  padding-bottom: 1px;
+  display: inline;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .nobusses {
@@ -206,6 +214,7 @@ select {
 
 .settings {
   display: inline-block;
+  height: 20px;
 }
 
 .settings input {

@@ -7,7 +7,7 @@ import StopInfo from "./StopInfo";
 import Busses from "./Busses";
 import ErrorScreen from "./ErrorScreen";
 import CloseStops from "./CloseStops";
-import ModeButton from "./ModeButton";
+import ModeButtons from "./ModeButtons";
 import getUserLocation from "../Utils/getUserLocation";
 import getTimeDifference from "../Utils/getTimeDifference";
 import distanceCalculator from "../Utils/distanceCalculator";
@@ -296,7 +296,7 @@ class App extends React.Component {
               <div style={{ display: "inline" }}>
                 {!this.state.userLocation.error &&
                   this.state.closestStops.length > 0 && (
-                    <ModeButton
+                    <ModeButtons
                       mode={this.state.mode}
                       changeMode={this.changeMode}
                     />
